@@ -11,74 +11,52 @@ const traditionGuides = {
 
 export default {
   async fetch(request, env) {
-    const requestId = crypto.randomUUID();
-    const debugEnabled = env.DEBUG_MODE === "true";
     const origin = request.headers.get("Origin") || "";
-    const allowedOrigins = getAllowedOrigins(env);
-    const acceptedOrigin = resolveAllowedOrigin(origin, allowedOrigins);
+    const allowedOrigin = env.ALLOWED_ORIGIN || "https://oraculo.devnexusdigital.com";
 
     if (request.method === "OPTIONS") {
-      if (origin && !acceptedOrigin) {
-        return new Response(null, { status: 403 });
-      }
       return new Response(null, {
         status: 204,
-        headers: { ...corsHeaders(acceptedOrigin), "X-Oraculo-Request-ID": requestId }
+        headers: corsHeaders(origin, allowedOrigin)
       });
     }
 
-    if (request.method === "GET") {
-      return jsonResponse(200, {
-        status: "ok",
-        service: "Oráculo da Palma API",
-        requestId,
-        debug: debugEnabled ? {
-          origin: origin || null,
-          acceptedOrigin: acceptedOrigin || null,
-          allowedOrigins,
-          model: env.GROQ_VISION_MODEL || "qwen/qwen3.6-27b",
-          groqKeyConfigured: Boolean(env.GROQ_API_KEY),
-          timestamp: new Date().toISOString()
-        } : undefined
-      }, acceptedOrigin, requestId);
-    }
-
     if (request.method !== "POST") {
-      return jsonResponse(405, { error: "Método não autorizado.", requestId }, acceptedOrigin, requestId);
+      return jsonResponse(405, { error: "Método não autorizado." }, origin, allowedOrigin);
     }
 
-    if (origin && !acceptedOrigin) {
-      return jsonResponse(403, { error: "Origem não autorizada.", requestId, origin, allowedOrigins: debugEnabled ? allowedOrigins : undefined }, "", requestId);
+    if (origin && origin !== allowedOrigin && !isLocalOrigin(origin)) {
+      return jsonResponse(403, { error: "Origem não autorizada." }, origin, allowedOrigin);
     }
 
     if (!env.GROQ_API_KEY) {
-      return jsonResponse(500, { error: "A chave GROQ_API_KEY ainda não foi configurada no Cloudflare Worker.", requestId }, acceptedOrigin, requestId);
+      return jsonResponse(500, { error: "A chave GROQ_API_KEY ainda não foi configurada no Cloudflare Worker." }, origin, allowedOrigin);
     }
 
     const contentLength = Number(request.headers.get("Content-Length") || 0);
     if (contentLength > 10 * 1024 * 1024) {
-      return jsonResponse(413, { error: "O pedido é demasiado grande.", requestId }, acceptedOrigin, requestId);
+      return jsonResponse(413, { error: "O pedido é demasiado grande." }, origin, allowedOrigin);
     }
 
     let payload;
     try {
       payload = await request.json();
     } catch {
-      return jsonResponse(400, { error: "Pedido inválido.", requestId }, acceptedOrigin, requestId);
+      return jsonResponse(400, { error: "Pedido inválido." }, origin, allowedOrigin);
     }
 
     const { imageDataUrl, birthDate, sex, tradition } = payload;
     if (!imageDataUrl?.startsWith("data:image/")) {
-      return jsonResponse(400, { error: "A imagem não chegou num formato válido.", requestId }, acceptedOrigin, requestId);
+      return jsonResponse(400, { error: "A imagem não chegou num formato válido." }, origin, allowedOrigin);
     }
     if (!birthDate || Number.isNaN(Date.parse(birthDate))) {
-      return jsonResponse(400, { error: "A data de nascimento não é válida.", requestId }, acceptedOrigin, requestId);
+      return jsonResponse(400, { error: "A data de nascimento não é válida." }, origin, allowedOrigin);
     }
     if (!ALLOWED_SEX.has(sex)) {
-      return jsonResponse(400, { error: "A opção de sexo não é válida.", requestId }, acceptedOrigin, requestId);
+      return jsonResponse(400, { error: "A opção de sexo não é válida." }, origin, allowedOrigin);
     }
     if (!ALLOWED_TRADITIONS.has(tradition)) {
-      return jsonResponse(400, { error: "A tradição de leitura não é válida.", requestId }, acceptedOrigin, requestId);
+      return jsonResponse(400, { error: "A tradição de leitura não é válida." }, origin, allowedOrigin);
     }
 
     const model = env.GROQ_VISION_MODEL || "qwen/qwen3.6-27b";
@@ -160,106 +138,53 @@ Analisa a fotografia e cria a leitura solicitada dentro das regras definidas.
         })
       });
 
-      const groqText = await groqResponse.text();
-      const groqParsed = parseJsonOrText(groqText);
-      const groqData = groqParsed.value;
+      const groqData = await groqResponse.json();
       if (!groqResponse.ok) {
         console.error("Groq error:", groqData);
         return jsonResponse(groqResponse.status, {
-          error: groqData?.error?.message || "O serviço de leitura não respondeu correctamente.",
-          requestId,
-          debug: debugEnabled ? {
-            phase: "groq_response",
-            model,
-            upstreamStatus: groqResponse.status,
-            upstreamStatusText: groqResponse.statusText,
-            upstreamRequestId: groqResponse.headers.get("x-request-id"),
-            upstreamBody: groqData
-          } : undefined
-        }, acceptedOrigin, requestId);
-      }
-
-      if (!groqParsed.isJson) {
-        throw new Error(`A Groq devolveu uma resposta não JSON: ${groqText.slice(0, 1000)}`);
+          error: groqData?.error?.message || "O serviço de leitura não respondeu correctamente."
+        }, origin, allowedOrigin);
       }
 
       const content = groqData?.choices?.[0]?.message?.content;
       if (!content) throw new Error("Resposta vazia do modelo.");
 
       const reading = safeParseJson(content);
-      return jsonResponse(200, { ...sanitiseReading(reading), _debug: debugEnabled ? { requestId, model, phase: "completed" } : undefined }, acceptedOrigin, requestId);
+      return jsonResponse(200, sanitiseReading(reading), origin, allowedOrigin);
     } catch (error) {
       console.error("read-palm failure:", error);
       return jsonResponse(500, {
-        error: "Não foi possível concluir a leitura. Tenta novamente com outra fotografia.",
-        requestId,
-        debug: debugEnabled ? {
-          phase: "worker_exception",
-          model,
-          name: error?.name || "Error",
-          message: error?.message || String(error),
-          stack: error?.stack || null
-        } : undefined
-      }, acceptedOrigin, requestId);
+        error: "Não foi possível concluir a leitura. Tenta novamente com outra fotografia."
+      }, origin, allowedOrigin);
     }
   }
 };
-
-function getAllowedOrigins(env) {
-  const configured = env.ALLOWED_ORIGINS ||
-    "https://oraculo.devnexusdigital.com,https://salazar-cruz.github.io";
-
-  return configured
-    .split(",")
-    .map((value) => value.trim().replace(/\/$/, ""))
-    .filter(Boolean);
-}
 
 function isLocalOrigin(origin) {
   return /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin);
 }
 
-function resolveAllowedOrigin(origin, allowedOrigins) {
-  if (!origin) return "";
-  const normalisedOrigin = origin.replace(/\/$/, "");
-  return allowedOrigins.includes(normalisedOrigin) || isLocalOrigin(normalisedOrigin)
-    ? normalisedOrigin
-    : "";
-}
-
-function corsHeaders(acceptedOrigin) {
-  const headers = {
+function corsHeaders(origin, allowedOrigin) {
+  const acceptedOrigin = origin === allowedOrigin || isLocalOrigin(origin) ? origin : allowedOrigin;
+  return {
+    "Access-Control-Allow-Origin": acceptedOrigin,
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Expose-Headers": "X-Oraculo-Request-ID, X-Oraculo-Debug",
     "Access-Control-Max-Age": "86400",
     "Vary": "Origin"
   };
-
-  if (acceptedOrigin) headers["Access-Control-Allow-Origin"] = acceptedOrigin;
-  return headers;
 }
 
-function jsonResponse(status, body, acceptedOrigin, requestId = "") {
+function jsonResponse(status, body, origin, allowedOrigin) {
   return new Response(JSON.stringify(body), {
     status,
     headers: {
       "Content-Type": "application/json; charset=utf-8",
       "Cache-Control": "no-store",
       "X-Content-Type-Options": "nosniff",
-      "X-Oraculo-Request-ID": requestId,
-      "X-Oraculo-Debug": "enabled",
-      ...corsHeaders(acceptedOrigin)
+      ...corsHeaders(origin, allowedOrigin)
     }
   });
-}
-
-function parseJsonOrText(text) {
-  try {
-    return { isJson: true, value: JSON.parse(text) };
-  } catch {
-    return { isJson: false, value: text };
-  }
 }
 
 function safeParseJson(content) {
