@@ -1,0 +1,7 @@
+name = "oraculo-da-palma-api"
+main = "src/index.js"
+compatibility_date = "2026-07-23"
+
+[vars]
+ALLOWED_ORIGIN = "https://oraculo.devnexusdigital.com"
+GROQ_VISION_MODEL = "qwen/qwen3.6-27b"

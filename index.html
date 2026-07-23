@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Uma experiência de quiromancia visual, criada para entretenimento." />
+  <meta name="theme-color" content="#09070f" />
+  <title>Oráculo da Palma — Leitura Simbólica</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-tradition="africana">
+  <canvas id="stars" aria-hidden="true"></canvas>
+  <div class="mist mist-one" aria-hidden="true"></div>
+  <div class="mist mist-two" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#inicio" aria-label="Oráculo da Palma">
+      <span class="brand-mark" aria-hidden="true">
+        <span class="brand-eye"></span>
+      </span>
+      <span>
+        <strong>Oráculo da Palma</strong>
+        <small>uma experiência DevNexus Digital</small>
+      </span>
+    </a>
+    <a class="top-link" href="#leitura">Iniciar leitura</a>
+  </header>
+
+  <main>
+    <section id="inicio" class="hero shell">
+      <div class="hero-copy">
+        <p class="eyebrow">A tua mão guarda um mapa simbólico</p>
+        <h1>Entre linhas, datas e antigos arquétipos.</h1>
+        <p class="hero-text">
+          Fotografa a palma, escolhe uma tradição e recebe uma interpretação única,
+          criada em poucos instantes a partir dos traços visíveis da tua mão.
+        </p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#leitura">Revelar a minha leitura</a>
+          <a class="button button-ghost" href="#como-funciona">Como funciona</a>
+        </div>
+        <p class="microcopy">Experiência simbólica para entretenimento. Sem valor científico, clínico ou divinatório.</p>
+      </div>
+
+      <div class="oracle-stage" aria-hidden="true">
+        <div class="halo halo-a"></div>
+        <div class="halo halo-b"></div>
+        <div class="oracle-disc">
+          <span class="rune rune-1">✦</span>
+          <span class="rune rune-2">☾</span>
+          <span class="rune rune-3">◇</span>
+          <span class="rune rune-4">✧</span>
+          <div class="palm-glyph">
+            <span class="finger f1"></span>
+            <span class="finger f2"></span>
+            <span class="finger f3"></span>
+            <span class="finger f4"></span>
+            <span class="finger f5"></span>
+            <span class="palm-body"></span>
+            <span class="palm-line line-life"></span>
+            <span class="palm-line line-heart"></span>
+            <span class="palm-line line-head"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="leitura" class="reading-section shell">
+      <div class="section-heading">
+        <p class="eyebrow">Ritual digital</p>
+        <h2>Prepara a tua leitura</h2>
+        <p>A fotografia é analisada apenas para gerar esta experiência e não deve conter o rosto nem documentos pessoais.</p>
+      </div>
+
+      <form id="palm-form" class="reading-grid">
+        <div class="panel upload-panel">
+          <div class="panel-number">01</div>
+          <div class="panel-head">
+            <h3>Mostra a palma</h3>
+            <p>Mão aberta, luz uniforme, fundo simples e fotografia tirada de cima.</p>
+          </div>
+
+          <label class="dropzone" id="dropzone" for="palm-image">
+            <input id="palm-image" name="palmImage" type="file" accept="image/jpeg,image/png,image/webp" capture="environment" required />
+            <img id="preview" alt="Pré-visualização da palma seleccionada" hidden />
+            <span class="upload-empty" id="upload-empty">
+              <span class="upload-symbol">✋</span>
+              <strong>Tirar fotografia ou carregar imagem</strong>
+              <small>JPG, PNG ou WebP · máximo recomendado: 8 MB</small>
+            </span>
+            <button class="remove-image" id="remove-image" type="button" hidden>Remover imagem</button>
+          </label>
+
+          <div class="photo-tips">
+            <span>✓ pulso visível</span>
+            <span>✓ dedos afastados</span>
+            <span>✓ sem sombras fortes</span>
+          </div>
+        </div>
+
+        <div class="panel details-panel">
+          <div class="panel-number">02</div>
+          <div class="panel-head">
+            <h3>Define o contexto</h3>
+            <p>A data e o sexo apenas orientam o tom simbólico da narrativa.</p>
+          </div>
+
+          <div class="field-row">
+            <label class="field">
+              <span>Data de nascimento</span>
+              <input id="birth-date" name="birthDate" type="date" required />
+            </label>
+            <label class="field">
+              <span>Sexo</span>
+              <select id="sex" name="sex" required>
+                <option value="" selected disabled>Seleccionar</option>
+                <option value="feminino">Feminino</option>
+                <option value="masculino">Masculino</option>
+                <option value="nao-indicado">Prefiro não indicar</option>
+              </select>
+            </label>
+          </div>
+
+          <fieldset class="traditions">
+            <legend>Escolhe a tradição da leitura</legend>
+
+            <label class="tradition-card">
+              <input type="radio" name="tradition" value="africana" checked />
+              <span class="tradition-icon">☀</span>
+              <span><strong>Africana</strong><small>Ancestral, telúrica e ligada à memória.</small></span>
+            </label>
+
+            <label class="tradition-card">
+              <input type="radio" name="tradition" value="europeia" />
+              <span class="tradition-icon">♜</span>
+              <span><strong>Europeia</strong><small>Clássica, sóbria e inspirada na quiromancia tradicional.</small></span>
+            </label>
+
+            <label class="tradition-card">
+              <input type="radio" name="tradition" value="elfica" />
+              <span class="tradition-icon">❧</span>
+              <span><strong>Élfica</strong><small>Poética, natural e abertamente fantástica.</small></span>
+            </label>
+
+            <label class="tradition-card">
+              <input type="radio" name="tradition" value="magia-antiga" />
+              <span class="tradition-icon">△</span>
+              <span><strong>Magia Antiga</strong><small>Hermética, alquímica e envolta em presságios simbólicos.</small></span>
+            </label>
+          </fieldset>
+
+          <label class="consent">
+            <input id="consent" type="checkbox" required />
+            <span>Confirmo que esta é uma experiência de entretenimento e autorizo o envio temporário da imagem para análise.</span>
+          </label>
+
+          <button class="button button-primary submit-button" id="submit-button" type="submit">
+            <span>Consultar o oráculo</span>
+            <span aria-hidden="true">✦</span>
+          </button>
+
+          <p class="form-error" id="form-error" role="alert"></p>
+        </div>
+      </form>
+    </section>
+
+    <section id="oracle-loading" class="oracle-loading shell" hidden aria-live="polite">
+      <div class="loading-sigil">
+        <span></span><span></span><span></span>
+      </div>
+      <p class="eyebrow">A interpretar os sinais</p>
+      <h2 id="loading-title">O oráculo observa as linhas da tua mão…</h2>
+      <p id="loading-message">Primeiro, verifica a nitidez da imagem. Depois, cruza os traços visíveis com a tradição escolhida.</p>
+    </section>
+
+    <section id="result" class="result-section shell" hidden aria-live="polite">
+      <div class="result-header">
+        <div>
+          <p class="eyebrow" id="result-tradition">Leitura Africana</p>
+          <h2 id="result-title">A mensagem da tua palma</h2>
+        </div>
+        <div class="quality-badge">
+          <span>Qualidade da imagem</span>
+          <strong id="quality-score">—</strong>
+        </div>
+      </div>
+
+      <div id="retake-warning" class="retake-warning" hidden>
+        <strong>A imagem não está suficientemente clara.</strong>
+        <span id="retake-message">Repete a fotografia com mais luz e a palma totalmente aberta.</span>
+        <button id="retake-button" class="button button-ghost" type="button">Escolher outra imagem</button>
+      </div>
+
+      <article class="prophecy-card main-prophecy">
+        <span class="card-symbol">✦</span>
+        <p id="opening-message"></p>
+      </article>
+
+      <div class="result-grid">
+        <article class="prophecy-card">
+          <p class="card-label">Linha da vida</p>
+          <h3 id="life-title">Vitalidade e caminho</h3>
+          <p id="life-reading"></p>
+        </article>
+        <article class="prophecy-card">
+          <p class="card-label">Linha da cabeça</p>
+          <h3 id="head-title">Mente e decisão</h3>
+          <p id="head-reading"></p>
+        </article>
+        <article class="prophecy-card">
+          <p class="card-label">Linha do coração</p>
+          <h3 id="heart-title">Afectos e vínculos</h3>
+          <p id="heart-reading"></p>
+        </article>
+        <article class="prophecy-card">
+          <p class="card-label">Linha do destino</p>
+          <h3 id="fate-title">Vocação e mudanças</h3>
+          <p id="fate-reading"></p>
+        </article>
+      </div>
+
+      <article class="prophecy-card closing-prophecy">
+        <p class="card-label">Síntese do oráculo</p>
+        <h3 id="archetype"></h3>
+        <p id="closing-message"></p>
+        <div class="symbols-row" id="symbols-row"></div>
+      </article>
+
+      <div class="result-actions">
+        <button id="new-reading" class="button button-primary" type="button">Fazer nova leitura</button>
+        <button id="share-reading" class="button button-ghost" type="button">Partilhar resultado</button>
+      </div>
+    </section>
+
+    <section id="como-funciona" class="how-section shell">
+      <div class="section-heading compact">
+        <p class="eyebrow">Sem truques escondidos</p>
+        <h2>Como funciona</h2>
+      </div>
+      <div class="steps-grid">
+        <article><span>1</span><h3>Imagem</h3><p>O sistema avalia nitidez, enquadramento e traços visíveis da palma.</p></article>
+        <article><span>2</span><h3>Contexto</h3><p>A data de nascimento e a opção de sexo ajudam a variar o enquadramento narrativo.</p></article>
+        <article><span>3</span><h3>Tradição</h3><p>Cada modo altera vocabulário, simbolismo, ritmo e atmosfera da leitura.</p></article>
+        <article><span>4</span><h3>Resultado</h3><p>A interpretação é gerada no momento e apresentada como entretenimento.</p></article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell footer-inner">
+      <div>
+        <strong>Oráculo da Palma</strong>
+        <p>Uma experiência experimental da DevNexus Digital.</p>
+      </div>
+      <p>Privacidade · Termos · © <span id="year"></span> DevNexus Digital</p>
+    </div>
+  </footer>
+
+  <script src="config.js" defer></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
