@@ -1,1 +1,3 @@
 https://oraculo-da-palma-api.econsulting-cv.workers.dev
+
+chave grok: gsk_vaitomarnocu.com
