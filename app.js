@@ -9,7 +9,15 @@ const submitButton = document.getElementById("submit-button");
 const loadingSection = document.getElementById("oracle-loading");
 const resultSection = document.getElementById("result");
 const retakeWarning = document.getElementById("retake-warning");
+const debugPanel = document.getElementById("debug-panel");
+const debugSummary = document.getElementById("debug-summary");
+const debugOutput = document.getElementById("debug-output");
+const copyDebugButton = document.getElementById("copy-debug");
 const apiEndpoint = window.ORACULO_CONFIG?.apiUrl;
+const debugMode = window.ORACULO_CONFIG?.debug !== false;
+const REQUEST_TIMEOUT_MS = 90000;
+
+let activeDebugReport = null;
 
 const traditionNames = {
   africana: "Leitura Africana",
@@ -60,13 +68,36 @@ removeImageButton.addEventListener("click", (event) => {
   clearImage();
 });
 
-document.getElementById("retake-button").addEventListener("click", resetToForm);
+document.getElementById("retake-button").addEventListener("click", () => {
+  clearImage();
+  resetToForm();
+});
 document.getElementById("new-reading").addEventListener("click", resetToForm);
 document.getElementById("share-reading").addEventListener("click", shareReading);
+copyDebugButton.addEventListener("click", copyDebugReport);
+
+window.addEventListener("error", (event) => {
+  if (!debugMode || !activeDebugReport) return;
+  activeDebugReport.browserError = {
+    message: event.message,
+    source: event.filename,
+    line: event.lineno,
+    column: event.colno,
+    error: serialiseError(event.error)
+  };
+  renderDebugReport("Erro JavaScript detectado", true);
+});
+
+window.addEventListener("unhandledrejection", (event) => {
+  if (!debugMode || !activeDebugReport) return;
+  activeDebugReport.unhandledPromise = serialiseError(event.reason);
+  renderDebugReport("Promessa rejeitada sem tratamento", true);
+});
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   errorBox.textContent = "";
+  resetDebugReport();
 
   if (!selectedFile) {
     errorBox.textContent = "Selecciona uma fotografia nítida da palma da mão.";
@@ -75,38 +106,300 @@ form.addEventListener("submit", async (event) => {
 
   if (!form.reportValidity()) return;
 
+  activeDebugReport = createDebugReport();
+  activeDebugReport.phase = "Preparação da imagem";
+  activeDebugReport.image = {
+    name: selectedFile.name,
+    type: selectedFile.type,
+    originalBytes: selectedFile.size,
+    originalMiB: bytesToMiB(selectedFile.size)
+  };
+  renderDebugReport("Diagnóstico em curso", false);
+
   try {
     setLoading(true);
     const imageDataUrl = await compressImage(selectedFile);
     const formData = new FormData(form);
 
+    activeDebugReport.image.compressedDataUrlLength = imageDataUrl.length;
+    activeDebugReport.image.estimatedPayloadMiB = bytesToMiB(
+      new Blob([imageDataUrl]).size
+    );
+
     if (!apiEndpoint || apiEndpoint.includes("SUBDOMINIO")) {
       throw new Error("O endereço da API ainda não foi configurado no ficheiro config.js.");
     }
 
-    const response = await fetch(apiEndpoint, {
+    activeDebugReport.phase = "Teste de ligação à API";
+    activeDebugReport.connectivity = await testApiConnectivity(apiEndpoint);
+    renderDebugReport("Ligação testada; a enviar análise", false);
+
+    const requestBody = {
+      imageDataUrl,
+      birthDate: formData.get("birthDate"),
+      sex: formData.get("sex"),
+      tradition: formData.get("tradition"),
+      debug: debugMode
+    };
+
+    activeDebugReport.phase = "Pedido de análise enviado";
+    activeDebugReport.request = {
+      method: "POST",
+      url: apiEndpoint,
+      contentType: "application/json",
+      bodyBytes: new Blob([JSON.stringify(requestBody)]).size,
+      bodyMiB: bytesToMiB(new Blob([JSON.stringify(requestBody)]).size),
+      birthDate: requestBody.birthDate,
+      sex: requestBody.sex,
+      tradition: requestBody.tradition,
+      imageOmittedFromLog: true
+    };
+
+    const startedAt = performance.now();
+    const response = await fetchWithTimeout(apiEndpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        imageDataUrl,
-        birthDate: formData.get("birthDate"),
-        sex: formData.get("sex"),
-        tradition: formData.get("tradition")
-      })
-    });
+      body: JSON.stringify(requestBody),
+      cache: "no-store"
+    }, REQUEST_TIMEOUT_MS);
 
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error || "A leitura não ficou disponível.");
+    const responseText = await response.text();
+    const parsed = parseResponseBody(responseText);
 
-    latestReading = data;
-    renderReading(data, formData.get("tradition"));
+    activeDebugReport.response = {
+      received: true,
+      elapsedMs: Math.round(performance.now() - startedAt),
+      status: response.status,
+      statusText: response.statusText,
+      ok: response.ok,
+      type: response.type,
+      redirected: response.redirected,
+      finalUrl: response.url,
+      headers: headersToObject(response.headers),
+      body: parsed.value,
+      bodyWasJson: parsed.isJson,
+      rawBodyPreview: parsed.isJson ? undefined : responseText.slice(0, 5000)
+    };
+
+    if (!response.ok) {
+      const serverMessage = parsed.value?.error || `A API respondeu com HTTP ${response.status}.`;
+      throw new ApiRequestError(serverMessage, response.status, parsed.value);
+    }
+
+    if (!parsed.isJson || !parsed.value || typeof parsed.value !== "object") {
+      throw new Error("A API respondeu com conteúdo que não é JSON válido.");
+    }
+
+    latestReading = parsed.value;
+    activeDebugReport.phase = "Análise concluída";
+    activeDebugReport.completed = true;
+    activeDebugReport.completedAt = new Date().toISOString();
+    renderDebugReport("Diagnóstico técnico — análise concluída", false);
+    renderReading(parsed.value, formData.get("tradition"));
   } catch (error) {
     setLoading(false);
     form.hidden = false;
+
+    activeDebugReport = activeDebugReport || createDebugReport();
+    activeDebugReport.phase = "Falha";
+    activeDebugReport.completed = false;
+    activeDebugReport.failedAt = new Date().toISOString();
+    activeDebugReport.error = serialiseError(error);
+    activeDebugReport.diagnosis = diagnoseFailure(error, activeDebugReport);
+
     errorBox.textContent = error.message || "Ocorreu um erro inesperado.";
+    renderDebugReport("Diagnóstico técnico — erro detectado", true);
     document.getElementById("leitura").scrollIntoView({ behavior: "smooth" });
   }
 });
+
+class ApiRequestError extends Error {
+  constructor(message, status, body) {
+    super(message);
+    this.name = "ApiRequestError";
+    this.status = status;
+    this.body = body;
+  }
+}
+
+function createDebugReport() {
+  return {
+    debugMode,
+    startedAt: new Date().toISOString(),
+    page: {
+      url: window.location.href,
+      origin: window.location.origin,
+      protocol: window.location.protocol,
+      online: navigator.onLine,
+      language: navigator.language,
+      userAgent: navigator.userAgent
+    },
+    api: {
+      configuredUrl: apiEndpoint || null,
+      isHttps: Boolean(apiEndpoint?.startsWith("https://")),
+      hasPlaceholder: Boolean(apiEndpoint?.includes("SUBDOMINIO"))
+    }
+  };
+}
+
+function resetDebugReport() {
+  activeDebugReport = null;
+  debugPanel.hidden = true;
+  debugPanel.open = false;
+  debugOutput.textContent = "";
+}
+
+function renderDebugReport(summary, open) {
+  if (!debugMode || !activeDebugReport) return;
+  debugSummary.textContent = summary;
+  debugOutput.textContent = JSON.stringify(activeDebugReport, null, 2);
+  debugPanel.hidden = false;
+  debugPanel.open = open;
+}
+
+async function copyDebugReport() {
+  if (!activeDebugReport) return;
+  const text = JSON.stringify(activeDebugReport, null, 2);
+  try {
+    await navigator.clipboard.writeText(text);
+    const original = copyDebugButton.textContent;
+    copyDebugButton.textContent = "Diagnóstico copiado";
+    setTimeout(() => { copyDebugButton.textContent = original; }, 1800);
+  } catch {
+    debugOutput.focus();
+    window.getSelection()?.selectAllChildren(debugOutput);
+  }
+}
+
+async function testApiConnectivity(url) {
+  const report = {
+    testedAt: new Date().toISOString(),
+    corsReadableRequest: null,
+    opaqueReachabilityRequest: null,
+    inference: ""
+  };
+
+  try {
+    const response = await fetchWithTimeout(url, {
+      method: "GET",
+      cache: "no-store"
+    }, 12000);
+    const text = await response.text();
+    const parsed = parseResponseBody(text);
+    report.corsReadableRequest = {
+      success: true,
+      status: response.status,
+      statusText: response.statusText,
+      ok: response.ok,
+      type: response.type,
+      finalUrl: response.url,
+      headers: headersToObject(response.headers),
+      body: parsed.value,
+      bodyWasJson: parsed.isJson
+    };
+    report.inference = response.ok
+      ? "O Worker está acessível e a resposta GET é legível nesta origem."
+      : "O Worker respondeu e o navegador conseguiu ler a resposta, mas o estado HTTP indica erro.";
+    return report;
+  } catch (corsError) {
+    report.corsReadableRequest = {
+      success: false,
+      error: serialiseError(corsError)
+    };
+  }
+
+  try {
+    const opaqueResponse = await fetchWithTimeout(url, {
+      method: "GET",
+      mode: "no-cors",
+      cache: "no-store"
+    }, 12000);
+    report.opaqueReachabilityRequest = {
+      success: true,
+      type: opaqueResponse.type,
+      status: opaqueResponse.status
+    };
+    report.inference = "O endereço parece estar acessível, mas a resposta normal não é legível pelo navegador. A causa mais provável é CORS ou um redireccionamento para outra origem.";
+  } catch (networkError) {
+    report.opaqueReachabilityRequest = {
+      success: false,
+      error: serialiseError(networkError)
+    };
+    report.inference = "Nem o teste normal nem o teste opaco chegaram ao endereço. Verifica a URL do Worker, a publicação, o DNS, bloqueios de rede ou certificado HTTPS.";
+  }
+
+  return report;
+}
+
+async function fetchWithTimeout(url, options, timeoutMs) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+function parseResponseBody(text) {
+  if (!text) return { isJson: false, value: null };
+  try {
+    return { isJson: true, value: JSON.parse(text) };
+  } catch {
+    return { isJson: false, value: text };
+  }
+}
+
+function headersToObject(headers) {
+  const result = {};
+  for (const [key, value] of headers.entries()) result[key] = value;
+  return result;
+}
+
+function serialiseError(error) {
+  if (!error) return { name: "UnknownError", message: "Erro sem detalhes." };
+  if (typeof error === "string") return { name: "Error", message: error };
+  return {
+    name: error.name || "Error",
+    message: error.message || String(error),
+    stack: error.stack || null,
+    status: error.status || null,
+    body: error.body || null,
+    cause: error.cause ? String(error.cause) : null
+  };
+}
+
+function diagnoseFailure(error, report) {
+  const message = String(error?.message || "").toLowerCase();
+  const connectivity = report?.connectivity;
+
+  if (!navigator.onLine) {
+    return "O navegador está sem ligação à Internet.";
+  }
+  if (!apiEndpoint || apiEndpoint.includes("SUBDOMINIO")) {
+    return "O config.js ainda contém um endereço incompleto ou de exemplo.";
+  }
+  if (error?.name === "AbortError") {
+    return "O pedido excedeu o limite de tempo. O Worker ou a Groq demoraram mais de 90 segundos.";
+  }
+  if (message.includes("failed to fetch") || error?.name === "TypeError") {
+    if (connectivity?.opaqueReachabilityRequest?.success && !connectivity?.corsReadableRequest?.success) {
+      return "O Worker parece estar online, mas o navegador não recebeu autorização CORS para esta origem. Confirma ALLOWED_ORIGINS e volta a publicar o Worker.";
+    }
+    return "O navegador não recebeu resposta utilizável. As causas habituais são URL errada, Worker não publicado, CORS, certificado HTTPS, bloqueio de rede ou redireccionamento.";
+  }
+  if (error?.status === 401) return "A Groq recusou a autenticação. Confirma o segredo GROQ_API_KEY no Worker.";
+  if (error?.status === 403) return "O Worker ou a Groq recusaram o pedido. Verifica a origem autorizada e as permissões da chave.";
+  if (error?.status === 404) return "O endereço indicado não corresponde ao Worker publicado ou a rota não existe.";
+  if (error?.status === 413) return "O pedido excedeu o tamanho aceite. Usa uma imagem menor.";
+  if (error?.status === 429) return "A conta atingiu o limite de pedidos ou tokens da Groq.";
+  if (error?.status >= 500) return "O erro ocorreu no Worker ou no serviço Groq. Consulta o corpo da resposta e os registos do Worker.";
+  return "Consulta os campos error, connectivity, request e response do diagnóstico abaixo.";
+}
+
+function bytesToMiB(bytes) {
+  return Math.round((Number(bytes || 0) / 1024 / 1024) * 100) / 100;
+}
 
 function setImage(file) {
   if (!file.type.startsWith("image/")) {
@@ -140,21 +433,34 @@ async function compressImage(file) {
   const source = await loadImageSource(file);
   const sourceWidth = source.width || source.naturalWidth;
   const sourceHeight = source.height || source.naturalHeight;
-  const maxSide = 1280;
+
+  // As linhas da palma são detalhes finos. A versão anterior reduzia tudo para
+  // 1280 px e JPEG 0,82, o que eliminava textura em várias fotografias.
+  const maxSide = 2048;
   const scale = Math.min(1, maxSide / Math.max(sourceWidth, sourceHeight));
-  const width = Math.round(sourceWidth * scale);
-  const height = Math.round(sourceHeight * scale);
+  const width = Math.max(1, Math.round(sourceWidth * scale));
+  const height = Math.max(1, Math.round(sourceHeight * scale));
 
   const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
   const context = canvas.getContext("2d", { alpha: false });
+  context.imageSmoothingEnabled = true;
+  context.imageSmoothingQuality = "high";
   context.fillStyle = "#ffffff";
   context.fillRect(0, 0, width, height);
   context.drawImage(source, 0, 0, width, height);
   if (typeof source.close === "function") source.close();
 
-  return canvas.toDataURL("image/jpeg", 0.82);
+  if (activeDebugReport?.image) {
+    activeDebugReport.image.sourceWidth = sourceWidth;
+    activeDebugReport.image.sourceHeight = sourceHeight;
+    activeDebugReport.image.sentWidth = width;
+    activeDebugReport.image.sentHeight = height;
+    activeDebugReport.image.jpegQuality = 0.92;
+  }
+
+  return canvas.toDataURL("image/jpeg", 0.92);
 }
 
 async function loadImageSource(file) {
@@ -186,7 +492,14 @@ function setLoading(active) {
 function renderReading(data, tradition) {
   setLoading(false);
   resultSection.hidden = false;
-  retakeWarning.hidden = !data.needsRetake;
+  const needsRetake = Boolean(data.needsRetake);
+  retakeWarning.hidden = !needsRetake;
+
+  // Não repetir uma falsa leitura quando a fotografia está realmente inutilizável.
+  for (const element of resultSection.querySelectorAll(".main-prophecy, .result-grid, .closing-prophecy")) {
+    element.hidden = needsRetake;
+  }
+  document.getElementById("share-reading").hidden = needsRetake;
 
   document.getElementById("result-tradition").textContent = traditionNames[tradition] || "Leitura simbólica";
   document.getElementById("result-title").textContent = data.title || "A mensagem da tua palma";

@@ -3,6 +3,6 @@ main = "src/index.js"
 compatibility_date = "2026-07-23"
 
 [vars]
-DEBUG_MODE = "true"
-ALLOWED_ORIGINS = "https://oraculo.devnexusdigital.com"
+DEBUG_MODE = "false"
+ALLOWED_ORIGINS = "https://oraculo.devnexusdigital.com,https://salazar-cruz.github.io"
 GROQ_VISION_MODEL = "qwen/qwen3.6-27b"

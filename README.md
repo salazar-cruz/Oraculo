@@ -1,100 +1,28 @@
 # Oráculo da Palma
 
-Site de leitura simbólica da palma, preparado para:
+Versão completa para `oraculo.devnexusdigital.com`.
 
-- **Frontend:** GitHub Pages
-- **Backend da IA:** Cloudflare Worker
-- **Modelo:** Groq `qwen/qwen3.6-27b`
-- **Subdomínio:** `oraculo.devnexusdigital.com`
+## Publicação
 
-A chave Groq nunca fica no GitHub Pages nem no código público do navegador.
+Lê primeiro `PUBLICAR-SEM-LINHA-DE-COMANDOS.txt`.
 
-## Estrutura
+O frontend fica no GitHub Pages. A análise de imagem passa pelo Worker já criado:
 
-```text
-oraculo-da-palma/
-├── index.html
-├── styles.css
-├── app.js
-├── config.js
-├── CNAME
-├── .nojekyll
-└── worker/
-    ├── package.json
-    ├── wrangler.toml
-    └── src/
-        └── index.js
-```
+`https://oraculo-da-palma-api.econsulting-cv.workers.dev`
 
-## 1. Publicar o backend no Cloudflare Worker
+Para actualizar o Worker através do navegador, usa o ficheiro:
 
-É necessário ter Node.js instalado.
+`WORKER-CLOUDFLARE-COLAR-NO-EDITOR.js`
 
-```bash
-cd worker
-npm install
-npx wrangler login
-npx wrangler secret put GROQ_API_KEY
-npm run deploy
-```
+A chave Groq continua guardada como segredo no Worker e não está incluída neste pacote.
 
-Quando o Cloudflare terminar a publicação, apresenta um endereço semelhante a:
+## Ajustes desta versão
 
-```text
-https://oraculo-da-palma-api.nome-da-conta.workers.dev
-```
+- imagem até 2048 px;
+- compressão JPEG a 92%;
+- leitura aceite a partir de 30% quando a zona central da palma é reconhecível;
+- pequenos cortes, sombras moderadas e ausência do pulso deixam de provocar rejeição automática;
+- diagnóstico público desligado;
+- cache busting nos ficheiros do site.
 
-Guardar esse endereço.
-
-## 2. Configurar o frontend
-
-Abrir `config.js` e substituir:
-
-```javascript
-apiUrl: "https://oraculo-da-palma-api.SUBDOMINIO.workers.dev"
-```
-
-pelo endereço real do Worker.
-
-## 3. Publicar no GitHub Pages
-
-1. Criar um repositório, por exemplo `oraculo-da-palma`.
-2. Colocar estes ficheiros na raiz do repositório.
-3. Em **Settings → Pages**, escolher a publicação a partir da branch `main` e pasta `/root`.
-4. O ficheiro `CNAME` já indica `oraculo.devnexusdigital.com`.
-
-## 4. Configurar o DNS na Porkbun
-
-Criar um registo:
-
-```text
-Tipo: CNAME
-Host: oraculo
-Answer/Value: salazar-cruz.github.io
-```
-
-Não alterar os registos do domínio principal `devnexusdigital.com`.
-
-## 5. Testar localmente
-
-Frontend:
-
-```bash
-python -m http.server 8080
-```
-
-Abrir:
-
-```text
-http://localhost:8080
-```
-
-O Worker aceita temporariamente pedidos de `localhost` para testes.
-
-## Privacidade
-
-A fotografia é comprimida no navegador e enviada ao Worker, que a remete à Groq para análise. O código não guarda deliberadamente as imagens. Antes da abertura ao público, devem existir política de privacidade, termos de utilização, limites de pedidos e protecção contra abuso.
-
-## Limitação
-
-A leitura é uma experiência de entretenimento. Não constitui avaliação científica, médica, psicológica, financeira ou profissional.
+A leitura destina-se exclusivamente a entretenimento.
