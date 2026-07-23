@@ -165,6 +165,15 @@
           <p class="form-error" id="form-error" role="alert"></p>
         </div>
       </form>
+
+      <details id="debug-panel" class="debug-panel" hidden>
+        <summary id="debug-summary">Diagnóstico técnico</summary>
+        <div class="debug-toolbar">
+          <p>Modo de diagnóstico activo. A fotografia e a chave da API não são incluídas neste registo.</p>
+          <button id="copy-debug" class="button button-ghost button-small" type="button">Copiar diagnóstico</button>
+        </div>
+        <pre id="debug-output" tabindex="0"></pre>
+      </details>
     </section>
 
     <section id="oracle-loading" class="oracle-loading shell" hidden aria-live="polite">
