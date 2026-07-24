@@ -386,7 +386,7 @@ footer { border-top: 1px solid rgba(227,166,70,0.18); padding-block: 34px; backg
   .topbar { padding-inline: 14px; }.brand small, .top-link { display: none; }
   .hero { padding-block: 58px 80px; gap: 18px; }
   h1 { font-size: clamp(2.7rem, 14vw, 4.5rem); }
-  .oracle-stage { min-height: 390px; }.oracle-disc { width: min(330px, 88vw); }.oracle-eye { transform: scale(0.78); }
+  .oracle-stage { min-height: 390px; }.oracle-disc { width: min(330px, 88vw); }.oracle-eye { transform: scale(0.76); }
   .ancient-arch, .temple-shadow { display: none; }
   .reading-section, .result-section, .how-section { padding-block: 76px; }
   .ritual-step { grid-template-columns: 1fr; gap: 18px; padding: 24px 18px; }
@@ -526,3 +526,62 @@ footer { border-top: 1px solid rgba(227,166,70,0.18); padding-block: 34px; backg
 .eye-core { z-index: 3; }
 .eye-sclera { z-index: 2; }
 @keyframes pentagram-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+
+/* v1.5.3 — olhar orientado para o cursor */
+.eye-core { transform: translate(calc(var(--eye-x) * 14px), calc(var(--eye-y) * 8px)) rotate(calc(var(--eye-tilt) * 0.35)); transition: transform 58ms linear; }
+.eye-highlight-main { transform: translate(calc(var(--eye-x) * -2px), calc(var(--eye-y) * -1px)); }
+.eye-highlight-small { transform: translate(calc(var(--eye-x) * -1px), calc(var(--eye-y) * -0.6px)); }
+
+
+/* v1.5.4 — olho apenas redondo, sem fundo amendoado */
+.oracle-eye {
+  width: 250px;
+  height: 250px;
+  filter: drop-shadow(0 0 18px rgba(227,166,70,0.16)) drop-shadow(0 12px 28px rgba(0,0,0,0.34));
+}
+.eye-pentagram {
+  width: 240px;
+  height: 240px;
+  margin-left: -120px;
+  margin-top: -120px;
+  opacity: 0.28;
+}
+.eye-sclera { display: none !important; }
+.eye-core,
+.eye-core-round {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 126px;
+  height: 126px;
+  margin-left: -63px;
+  margin-top: -63px;
+  border-radius: 50%;
+  transform: translate(calc(var(--eye-x) * 12px), calc(var(--eye-y) * 12px));
+  transition: transform 58ms linear;
+  z-index: 3;
+}
+.eye-core-round::before {
+  content: "";
+  position: absolute;
+  inset: -9px;
+  border-radius: 50%;
+  border: 1px solid rgba(227,166,70,0.18);
+  box-shadow: 0 0 20px rgba(227,166,70,0.10), inset 0 0 18px rgba(255,224,146,0.06);
+}
+.eye-iris {
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 0 24px rgba(255,224,146,0.18), inset 0 -22px 30px rgba(0,0,0,0.46), 0 0 30px rgba(255,170,55,0.18);
+}
+.eye-highlight-main { left: 28px; top: 18px; }
+.eye-highlight-small { right: 24px; bottom: 26px; }
+.eye-aura {
+  inset: -26px;
+  background: radial-gradient(circle, rgba(214,117,37,0.14), rgba(214,117,37,0.04) 34%, transparent 66%);
+}
+@media (max-width: 900px) {
+  .oracle-stage { min-height: 360px; }
+  .oracle-eye { transform: scale(0.82); }
+}
