@@ -116,7 +116,7 @@ const TRANSLATIONS = {
     "how.step4Title": "A revelação",
     "how.step4Text": "Recebes uma interpretação simbólica das linhas visíveis, sem afirmações científicas.",
     "footer.concept": "Conceito de Salazar da Cruz",
-    "footer.version": "Versão 1.4.0",
+    "footer.version": "Versão 1.5.0",
     "error.imageRequired": "Seleciona uma fotografia nítida da palma da mão.",
     "error.nameRequired": "Escreve o teu nome antes de consultar o oráculo.",
     "error.invalidImage": "O ficheiro selecionado não é uma imagem válida.",
@@ -246,7 +246,7 @@ const TRANSLATIONS = {
     "how.step4Title": "The revelation",
     "how.step4Text": "You receive a symbolic interpretation of visible lines, without scientific claims.",
     "footer.concept": "Concept by Salazar da Cruz",
-    "footer.version": "Version 1.4.0",
+    "footer.version": "Version 1.5.0",
     "error.imageRequired": "Select a clear photograph of the palm of your hand.",
     "error.nameRequired": "Enter your name before consulting the oracle.",
     "error.invalidImage": "The selected file is not a valid image.",
@@ -376,7 +376,7 @@ const TRANSLATIONS = {
     "how.step4Title": "La révélation",
     "how.step4Text": "Vous recevez une interprétation symbolique des lignes visibles, sans affirmation scientifique.",
     "footer.concept": "Concept de Salazar da Cruz",
-    "footer.version": "Version 1.4.0",
+    "footer.version": "Version 1.5.0",
     "error.imageRequired": "Sélectionnez une photographie nette de la paume de votre main.",
     "error.nameRequired": "Saisissez votre nom avant de consulter l’oracle.",
     "error.invalidImage": "Le fichier sélectionné n’est pas une image valide.",
@@ -1115,6 +1115,56 @@ function formatNumber(value) {
   return new Intl.NumberFormat(LOCALE_CODES[currentLanguage]).format(Number(value || 0));
 }
 
+function initOracleEye() {
+  const eye = document.querySelector(".oracle-eye");
+  if (!eye) return;
+
+  let currentX = 0;
+  let currentY = 0;
+  let targetX = 0;
+  let targetY = 0;
+  let animationFrame = null;
+
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+  function animate() {
+    currentX += (targetX - currentX) * 0.14;
+    currentY += (targetY - currentY) * 0.14;
+    eye.style.setProperty("--eye-x", currentX.toFixed(3));
+    eye.style.setProperty("--eye-y", currentY.toFixed(3));
+    eye.style.setProperty("--eye-tilt", `${(currentX * 5).toFixed(2)}deg`);
+
+    if (Math.abs(targetX - currentX) > 0.001 || Math.abs(targetY - currentY) > 0.001) {
+      animationFrame = requestAnimationFrame(animate);
+    } else {
+      animationFrame = null;
+    }
+  }
+
+  function updateTarget(clientX, clientY) {
+    const rect = eye.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    targetX = clamp((clientX - centerX) / (window.innerWidth * 0.22), -1, 1);
+    targetY = clamp((clientY - centerY) / (window.innerHeight * 0.26), -1, 1);
+    if (!animationFrame) animationFrame = requestAnimationFrame(animate);
+  }
+
+  window.addEventListener("pointermove", (event) => updateTarget(event.clientX, event.clientY), { passive: true });
+  window.addEventListener("pointerleave", () => {
+    targetX = 0;
+    targetY = 0;
+    if (!animationFrame) animationFrame = requestAnimationFrame(animate);
+  });
+  window.addEventListener("blur", () => {
+    targetX = 0;
+    targetY = 0;
+    if (!animationFrame) animationFrame = requestAnimationFrame(animate);
+  });
+
+  updateTarget(window.innerWidth / 2, window.innerHeight / 2);
+}
+
 function drawStars() {
   const canvas = document.getElementById("stars");
   const context = canvas.getContext("2d");
@@ -1147,5 +1197,6 @@ function drawStars() {
   resize();
 }
 
+initOracleEye();
 drawStars();
 loadStats();
