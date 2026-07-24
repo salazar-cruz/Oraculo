@@ -585,3 +585,35 @@ footer { border-top: 1px solid rgba(227,166,70,0.18); padding-block: 34px; backg
   .oracle-stage { min-height: 360px; }
   .oracle-eye { transform: scale(0.82); }
 }
+
+
+/* v1.5.5 — sem pentagrama atrás do olho */
+.eye-pentagram { display: none !important; }
+.oracle-eye { filter: drop-shadow(0 0 16px rgba(227,166,70,0.12)) drop-shadow(0 10px 24px rgba(0,0,0,0.28)); }
+
+
+/* v1.5.6 — remover todo o ornamento por detrás do olho */
+.oracle-disc {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  animation: none !important;
+}
+.oracle-disc::before,
+.oracle-disc::after,
+.orbit,
+.disc-rune,
+.eye-pentagram {
+  display: none !important;
+  content: none !important;
+}
+.oracle-stage::before {
+  width: 58%;
+  height: 22%;
+  bottom: 10%;
+  background: radial-gradient(ellipse, rgba(226,103,27,0.12), transparent 72%);
+  filter: blur(24px);
+}
+.oracle-eye {
+  filter: drop-shadow(0 0 14px rgba(227,166,70,0.10)) drop-shadow(0 10px 24px rgba(0,0,0,0.28));
+}
