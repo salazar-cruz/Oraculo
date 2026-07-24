@@ -1,28 +1,30 @@
-# Oráculo da Palma
+# Oráculo da Palma — Versão 1.2.0
 
-Versão completa para `oraculo.devnexusdigital.com`.
+Pacote completo para `oraculo.devnexusdigital.com`.
+
+## Alterações desta versão
+
+- retiradas a data de nascimento e a indicação de sexo;
+- nome obrigatório no início da consulta;
+- a leitura dirige-se ao utilizador pelo nome;
+- retirada a caixa de confirmação que bloqueava a submissão;
+- aviso sobre envio temporário da imagem apresentado directamente junto do botão;
+- quatro figuras míticas integradas nas opções de leitura;
+- ambiente visual recriado como uma câmara antiga, escura e iluminada por fogo;
+- retirada a marca DevNexus da interface;
+- rodapé com `Conceito de Salazar da Cruz` e versão `1.2.0`;
+- mantém a melhoria de leitura de imagens até 2048 px e JPEG a 92%.
 
 ## Publicação
 
-Lê primeiro `PUBLICAR-SEM-LINHA-DE-COMANDOS.txt`.
+Lê `PUBLICAR-SEM-LINHA-DE-COMANDOS.txt`.
 
-O frontend fica no GitHub Pages. A análise de imagem passa pelo Worker já criado:
+O frontend fica no GitHub Pages. A análise passa pelo Worker existente:
 
 `https://oraculo-da-palma-api.econsulting-cv.workers.dev`
 
-Para actualizar o Worker através do navegador, usa o ficheiro:
+Para actualizar o Worker pelo navegador, usa:
 
 `WORKER-CLOUDFLARE-COLAR-NO-EDITOR.js`
 
 A chave Groq continua guardada como segredo no Worker e não está incluída neste pacote.
-
-## Ajustes desta versão
-
-- imagem até 2048 px;
-- compressão JPEG a 92%;
-- leitura aceite a partir de 30% quando a zona central da palma é reconhecível;
-- pequenos cortes, sombras moderadas e ausência do pulso deixam de provocar rejeição automática;
-- diagnóstico público desligado;
-- cache busting nos ficheiros do site.
-
-A leitura destina-se exclusivamente a entretenimento.

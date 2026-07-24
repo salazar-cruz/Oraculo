@@ -30,7 +30,6 @@ let selectedFile = null;
 let latestReading = null;
 
 document.getElementById("year").textContent = new Date().getFullYear();
-document.getElementById("birth-date").max = new Date().toISOString().split("T")[0];
 
 for (const radio of document.querySelectorAll('input[name="tradition"]')) {
   radio.addEventListener("change", () => {
@@ -106,6 +105,15 @@ form.addEventListener("submit", async (event) => {
 
   if (!form.reportValidity()) return;
 
+  const readerName = document.getElementById("reader-name").value.trim();
+  if (readerName.length < 2) {
+    errorBox.textContent = "Escreve o teu nome antes de consultar o oráculo.";
+    document.getElementById("reader-name").focus();
+    return;
+  }
+
+  document.getElementById("loading-title").textContent = `${readerName}, o oráculo observa as linhas da tua mão…`;
+
   activeDebugReport = createDebugReport();
   activeDebugReport.phase = "Preparação da imagem";
   activeDebugReport.image = {
@@ -136,8 +144,7 @@ form.addEventListener("submit", async (event) => {
 
     const requestBody = {
       imageDataUrl,
-      birthDate: formData.get("birthDate"),
-      sex: formData.get("sex"),
+      readerName: String(formData.get("readerName") || "").trim(),
       tradition: formData.get("tradition"),
       debug: debugMode
     };
@@ -149,8 +156,7 @@ form.addEventListener("submit", async (event) => {
       contentType: "application/json",
       bodyBytes: new Blob([JSON.stringify(requestBody)]).size,
       bodyMiB: bytesToMiB(new Blob([JSON.stringify(requestBody)]).size),
-      birthDate: requestBody.birthDate,
-      sex: requestBody.sex,
+      readerName: requestBody.readerName,
       tradition: requestBody.tradition,
       imageOmittedFromLog: true
     };
@@ -195,7 +201,7 @@ form.addEventListener("submit", async (event) => {
     activeDebugReport.completed = true;
     activeDebugReport.completedAt = new Date().toISOString();
     renderDebugReport("Diagnóstico técnico — análise concluída", false);
-    renderReading(parsed.value, formData.get("tradition"));
+    renderReading(parsed.value, formData.get("tradition"), requestBody.readerName);
   } catch (error) {
     setLoading(false);
     form.hidden = false;
@@ -489,7 +495,7 @@ function setLoading(active) {
   if (active) loadingSection.scrollIntoView({ behavior: "smooth", block: "center" });
 }
 
-function renderReading(data, tradition) {
+function renderReading(data, tradition, readerName = "") {
   setLoading(false);
   resultSection.hidden = false;
   const needsRetake = Boolean(data.needsRetake);
@@ -502,7 +508,7 @@ function renderReading(data, tradition) {
   document.getElementById("share-reading").hidden = needsRetake;
 
   document.getElementById("result-tradition").textContent = traditionNames[tradition] || "Leitura simbólica";
-  document.getElementById("result-title").textContent = data.title || "A mensagem da tua palma";
+  document.getElementById("result-title").textContent = data.title || `${readerName || "Viajante"}, a mensagem da tua palma`;
   document.getElementById("quality-score").textContent = `${Number(data.imageQuality || 0)}%`;
   document.getElementById("retake-message").textContent = data.retakeReason || "Repete a fotografia com mais luz e a palma totalmente aberta.";
   document.getElementById("opening-message").textContent = data.opening || "";

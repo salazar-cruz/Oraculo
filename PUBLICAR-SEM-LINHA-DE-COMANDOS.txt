@@ -1,57 +1,65 @@
-ORÁCULO DA PALMA — PACOTE COMPLETO
-PUBLICAÇÃO SEM LINHA DE COMANDOS
-
-Este pacote já contém:
-- site completo para GitHub Pages;
-- endereço real da API no config.js;
-- melhoria da leitura de fotografias;
-- imagens enviadas até 2048 px, JPEG 92%;
-- rejeição apenas abaixo de 30% de legibilidade;
-- modo de diagnóstico público desligado;
-- código completo e actualizado do Cloudflare Worker.
+ORÁCULO DA PALMA — VERSÃO 1.2.0
+PACOTE COMPLETO — PUBLICAÇÃO SEM LINHA DE COMANDOS
 
 A) ACTUALIZAR O SITE NO GITHUB
 
 1. Abre o repositório do Oráculo no GitHub.
-2. Substitui os ficheiros da raiz pelos deste pacote:
+2. Substitui os ficheiros e a pasta da raiz pelos deste pacote:
+
    index.html
    styles.css
    app.js
    config.js
    CNAME
    .nojekyll
-3. Confirma as alterações no GitHub.
-4. Aguarda cerca de um minuto e abre:
+   assets/
+
+3. É importante enviar também os quatro ficheiros da pasta assets:
+
+   assets/africano.webp
+   assets/europeu.webp
+   assets/elfico.webp
+   assets/elemental.webp
+
+4. Confirma as alterações no GitHub.
+5. Aguarda cerca de um minuto e abre:
+
    https://oraculo.devnexusdigital.com
-5. Faz Ctrl+F5.
+
+6. Faz Ctrl+F5.
 
 Não alteres o CNAME nem o DNS da Porkbun.
 
 B) ACTUALIZAR O WORKER NA CLOUDFLARE, SEM CMD
+
+Esta actualização é obrigatória porque o Worker passa a receber o nome em vez
+da data de nascimento e do sexo.
 
 1. Entra na Cloudflare.
 2. Abre Workers & Pages.
 3. Selecciona: oraculo-da-palma-api
 4. Carrega em Edit Code.
 5. Apaga todo o código existente.
-6. Abre o ficheiro:
+6. Abre no computador o ficheiro:
+
    WORKER-CLOUDFLARE-COLAR-NO-EDITOR.js
+
 7. Copia todo o conteúdo e cola no editor da Cloudflare.
 8. Carrega em Deploy.
 
-A chave GROQ_API_KEY já configurada no Worker permanece guardada.
-Não voltes a colar a chave no código.
+A chave GROQ_API_KEY já configurada permanece guardada.
+Não coloques a chave dentro do código.
 
 C) TESTE
 
 1. Abre:
    https://oraculo-da-palma-api.econsulting-cv.workers.dev
-2. Deve aparecer uma resposta com "status":"ok".
-3. Abre o site, carrega uma fotografia e inicia a leitura.
 
-IMPORTANTE
+2. A resposta deve conter:
+   "status":"ok"
+   "version":"1.2.0"
 
-A pasta worker fica incluída como cópia integral do projecto, mas não é
-necessário executar npm, npx, Wrangler ou qualquer comando para esta
-actualização. Para o painel da Cloudflare, usa directamente o ficheiro
-WORKER-CLOUDFLARE-COLAR-NO-EDITOR.js.
+3. Abre o site, indica um nome, carrega uma fotografia, escolhe uma tradição e
+   inicia a leitura.
+
+Não é necessário executar npm, npx, Wrangler, CMD ou PowerShell.
