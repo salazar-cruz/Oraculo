@@ -617,3 +617,23 @@ footer { border-top: 1px solid rgba(227,166,70,0.18); padding-block: 34px; backg
 .oracle-eye {
   filter: drop-shadow(0 0 14px rgba(227,166,70,0.10)) drop-shadow(0 10px 24px rgba(0,0,0,0.28));
 }
+
+
+/* v1.5.7 — restaurar apenas o círculo, sem pentagrama */
+.oracle-disc {
+  border: 1px solid rgba(227,166,70,0.54) !important;
+  background: radial-gradient(circle, rgba(65,33,13,0.36), rgba(7,4,2,0.92) 66%) !important;
+  box-shadow: 0 0 80px rgba(227,166,70,0.17), inset 0 0 70px rgba(227,166,70,0.08) !important;
+  animation: breathe 6s ease-in-out infinite !important;
+}
+.oracle-disc::before,
+.oracle-disc::after {
+  display: block !important;
+  content: "" !important;
+  position: absolute;
+  border: 1px solid rgba(227,166,70,0.2);
+  border-radius: 50%;
+}
+.oracle-disc::before { inset: 7%; }
+.oracle-disc::after { inset: 15%; border-style: dashed; animation: spin 50s linear infinite; }
+.eye-pentagram { display: none !important; content: none !important; }
