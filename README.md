@@ -1,4 +1,4 @@
-# Oráculo da Palma — v1.5.0
+# Oráculo da Palma — v1.5.1
 
 Aplicação web estática para GitHub Pages, com backend de visão no Cloudflare Worker e Groq.
 
