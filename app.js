@@ -116,7 +116,7 @@ const TRANSLATIONS = {
     "how.step4Title": "A revelação",
     "how.step4Text": "Recebes uma interpretação simbólica das linhas visíveis, sem afirmações científicas.",
     "footer.concept": "Conceito de Salazar da Cruz",
-    "footer.version": "Versão 1.5.7",
+    "footer.version": "Versão 1.5.9",
     "error.imageRequired": "Seleciona uma fotografia nítida da palma da mão.",
     "error.nameRequired": "Escreve o teu nome antes de consultar o oráculo.",
     "error.invalidImage": "O ficheiro selecionado não é uma imagem válida.",
@@ -246,7 +246,7 @@ const TRANSLATIONS = {
     "how.step4Title": "The revelation",
     "how.step4Text": "You receive a symbolic interpretation of visible lines, without scientific claims.",
     "footer.concept": "Concept by Salazar da Cruz",
-    "footer.version": "Version 1.5.7",
+    "footer.version": "Version 1.5.9",
     "error.imageRequired": "Select a clear photograph of the palm of your hand.",
     "error.nameRequired": "Enter your name before consulting the oracle.",
     "error.invalidImage": "The selected file is not a valid image.",
@@ -376,7 +376,7 @@ const TRANSLATIONS = {
     "how.step4Title": "La révélation",
     "how.step4Text": "Vous recevez une interprétation symbolique des lignes visibles, sans affirmation scientifique.",
     "footer.concept": "Concept de Salazar da Cruz",
-    "footer.version": "Version 1.5.7",
+    "footer.version": "Version 1.5.9",
     "error.imageRequired": "Sélectionnez une photographie nette de la paume de votre main.",
     "error.nameRequired": "Saisissez votre nom avant de consulter l’oracle.",
     "error.invalidImage": "Le fichier sélectionné n’est pas une image valide.",
@@ -1132,7 +1132,9 @@ function initOracleEye() {
     currentY += (targetY - currentY) * 0.16;
     eye.style.setProperty("--eye-x", currentX.toFixed(3));
     eye.style.setProperty("--eye-y", currentY.toFixed(3));
-    eye.style.setProperty("--eye-tilt", `${(currentX * 3.2).toFixed(2)}deg`);
+    eye.style.setProperty("--gaze-x", currentX.toFixed(3));
+    eye.style.setProperty("--gaze-y", currentY.toFixed(3));
+    eye.style.setProperty("--eye-tilt", `${(currentX * 2.2).toFixed(2)}deg`);
 
     if (Math.abs(targetX - currentX) > 0.001 || Math.abs(targetY - currentY) > 0.001) {
       animationFrame = requestAnimationFrame(animate);
@@ -1151,8 +1153,8 @@ function initOracleEye() {
 
     const angleX = dx / distance;
     const angleY = dy / distance;
-    const reachX = clamp(Math.abs(dx) / (rect.width * 1.8), 0, 1);
-    const reachY = clamp(Math.abs(dy) / (rect.height * 2.6), 0, 1);
+    const reachX = clamp(Math.abs(dx) / (rect.width * 2.2), 0, 1);
+    const reachY = clamp(Math.abs(dy) / (rect.height * 3.1), 0, 1);
 
     targetX = clamp(angleX * reachX, -1, 1);
     targetY = clamp(angleY * reachY, -1, 1);
