@@ -1,30 +1,23 @@
-# Oráculo da Palma — Versão 1.2.0
+# Oráculo da Palma — v1.4.0
 
-Pacote completo para `oraculo.devnexusdigital.com`.
+Aplicação web estática para GitHub Pages, com backend de visão no Cloudflare Worker e Groq.
 
-## Alterações desta versão
+## Funcionalidades
 
-- retiradas a data de nascimento e a indicação de sexo;
-- nome obrigatório no início da consulta;
-- a leitura dirige-se ao utilizador pelo nome;
-- retirada a caixa de confirmação que bloqueava a submissão;
-- aviso sobre envio temporário da imagem apresentado directamente junto do botão;
-- quatro figuras míticas integradas nas opções de leitura;
-- ambiente visual recriado como uma câmara antiga, escura e iluminada por fogo;
-- retirada a marca DevNexus da interface;
-- rodapé com `Conceito de Salazar da Cruz` e versão `1.2.0`;
-- mantém a melhoria de leitura de imagens até 2048 px e JPEG a 92%.
+- Português, inglês e francês.
+- Seleção automática inicial pelo idioma do navegador.
+- Nome obrigatório para personalizar a leitura.
+- Fotografia pela câmara ou carregamento de imagem.
+- Leituras Africana, Europeia, Élfica e Magia Antiga.
+- Estatísticas públicas agregadas por país.
+- Sem armazenamento de nomes, fotografias ou endereços IP.
 
 ## Publicação
 
-Lê `PUBLICAR-SEM-LINHA-DE-COMANDOS.txt`.
+Siga `PUBLICAR-SEM-LINHA-DE-COMANDOS.txt`.
 
-O frontend fica no GitHub Pages. A análise passa pelo Worker existente:
+## Estatísticas
 
-`https://oraculo-da-palma-api.econsulting-cv.workers.dev`
+A base de dados Cloudflare D1 utiliza a ligação `STATS_DB`. Execute uma única vez o conteúdo de `D1-SCHEMA.sql` na consola da base de dados.
 
-Para actualizar o Worker pelo navegador, usa:
-
-`WORKER-CLOUDFLARE-COLAR-NO-EDITOR.js`
-
-A chave Groq continua guardada como segredo no Worker e não está incluída neste pacote.
+Cada leitura concluída e aceite acrescenta uma unidade ao país identificado pela Cloudflare. Imagens recusadas não entram na contagem.

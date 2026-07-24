@@ -1,6 +1,6 @@
 name = "oraculo-da-palma-api"
 main = "src/index.js"
-compatibility_date = "2026-07-23"
+compatibility_date = "2026-07-24"
 
 [vars]
 DEBUG_MODE = "false"

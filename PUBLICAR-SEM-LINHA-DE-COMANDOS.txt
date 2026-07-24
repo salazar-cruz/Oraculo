@@ -1,65 +1,64 @@
-ORÁCULO DA PALMA — VERSÃO 1.2.0
-PACOTE COMPLETO — PUBLICAÇÃO SEM LINHA DE COMANDOS
+ORÁCULO DA PALMA v1.4.0
+PUBLICAÇÃO SEM LINHA DE COMANDOS
 
-A) ACTUALIZAR O SITE NO GITHUB
+NOVIDADES
+- Site integral em português, inglês e francês.
+- O idioma escolhido fica guardado no navegador.
+- A leitura da Groq é produzida no idioma selecionado.
+- Nova secção de estatísticas com total de leituras e contagem por país.
+- Não são guardados endereços IP, nomes ou fotografias nas estatísticas.
+- O país é identificado pela infraestrutura da Cloudflare e só é guardado o código agregado do país.
 
-1. Abre o repositório do Oráculo no GitHub.
-2. Substitui os ficheiros e a pasta da raiz pelos deste pacote:
-
+A. PUBLICAR O SITE NO GITHUB
+1. Abra o repositório do Oráculo da Palma no GitHub.
+2. Substitua os ficheiros atuais pelos ficheiros da raiz deste pacote:
    index.html
    styles.css
    app.js
    config.js
    CNAME
    .nojekyll
-   assets/
+3. Envie também a pasta assets completa.
+4. Confirme as alterações no GitHub.
 
-3. É importante enviar também os quatro ficheiros da pasta assets:
+B. CRIAR O LIVRO DE ESTATÍSTICAS NA CLOUDFLARE
+Este passo é feito uma única vez e não exige CMD.
 
-   assets/africano.webp
-   assets/europeu.webp
-   assets/elfico.webp
-   assets/elemental.webp
+1. Entre no painel da Cloudflare.
+2. Abra Workers & Pages > D1 SQL Database.
+3. Selecione Create database.
+4. Nome: oraculo-stats
+5. Abra a base de dados criada e entre em Console.
+6. Abra o ficheiro D1-SCHEMA.sql deste pacote.
+7. Copie todo o conteúdo, cole na consola SQL e selecione Execute.
 
-4. Confirma as alterações no GitHub.
-5. Aguarda cerca de um minuto e abre:
+C. LIGAR A BASE DE DADOS AO WORKER
+1. Abra Workers & Pages > oraculo-da-palma-api.
+2. Abra Bindings.
+3. Selecione Add binding > D1 database.
+4. Variable name: STATS_DB
+5. Escolha a base de dados oraculo-stats.
+6. Guarde a ligação.
 
-   https://oraculo.devnexusdigital.com
+D. ATUALIZAR O CÓDIGO DO WORKER
+1. No Worker oraculo-da-palma-api, selecione Edit Code.
+2. Abra o ficheiro WORKER-CLOUDFLARE-COLAR-NO-EDITOR.js deste pacote.
+3. Copie todo o conteúdo.
+4. Apague o código atual do editor da Cloudflare e cole o novo.
+5. Selecione Deploy.
 
-6. Faz Ctrl+F5.
+A chave GROQ_API_KEY já guardada na Cloudflare mantém-se. Não a coloque no código.
 
-Não alteres o CNAME nem o DNS da Porkbun.
+E. TESTAR
+Abra:
+https://oraculo-da-palma-api.econsulting-cv.workers.dev/
 
-B) ACTUALIZAR O WORKER NA CLOUDFLARE, SEM CMD
+Deve aparecer version 1.4.0 e statistics configured true.
 
-Esta actualização é obrigatória porque o Worker passa a receber o nome em vez
-da data de nascimento e do sexo.
+Depois abra:
+https://oraculo-da-palma-api.econsulting-cv.workers.dev/stats
 
-1. Entra na Cloudflare.
-2. Abre Workers & Pages.
-3. Selecciona: oraculo-da-palma-api
-4. Carrega em Edit Code.
-5. Apaga todo o código existente.
-6. Abre no computador o ficheiro:
+No início, o total será zero. Cada leitura concluída com imagem aceite acrescenta uma unidade ao país correspondente.
 
-   WORKER-CLOUDFLARE-COLAR-NO-EDITOR.js
-
-7. Copia todo o conteúdo e cola no editor da Cloudflare.
-8. Carrega em Deploy.
-
-A chave GROQ_API_KEY já configurada permanece guardada.
-Não coloques a chave dentro do código.
-
-C) TESTE
-
-1. Abre:
-   https://oraculo-da-palma-api.econsulting-cv.workers.dev
-
-2. A resposta deve conter:
-   "status":"ok"
-   "version":"1.2.0"
-
-3. Abre o site, indica um nome, carrega uma fotografia, escolhe uma tradição e
-   inicia a leitura.
-
-Não é necessário executar npm, npx, Wrangler, CMD ou PowerShell.
+NOTA
+Caso a ligação STATS_DB ainda não esteja feita, as leituras continuam a funcionar. Apenas a secção de estatísticas indica que o livro de registos ainda não está ligado.
