@@ -671,61 +671,89 @@ footer { border-top: 1px solid rgba(227,166,70,0.18); padding-block: 34px; backg
 }
 
 
-/* v1.5.9 — neblina ambiente */
+/* v1.5.10 — névoa atmosférica que se adensa para o centro */
 .site-fog {
   position: fixed;
   inset: 0;
   z-index: 1;
   overflow: hidden;
   pointer-events: none;
-  opacity: 0.72;
-  mix-blend-mode: screen;
+  opacity: 0;
+  animation: fog-arrival 7s ease-out forwards;
 }
-.fog-layer {
+.site-fog::before,
+.site-fog::after {
+  content: "";
   position: absolute;
-  left: -35vw;
-  width: 170vw;
-  height: 42vh;
-  min-height: 260px;
-  border-radius: 50%;
-  filter: blur(34px);
+  inset: -8%;
+  pointer-events: none;
+  will-change: opacity, transform, -webkit-mask-size, mask-size;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+.site-fog::before {
   background:
-    radial-gradient(ellipse at 18% 55%, rgba(199,206,211,0.18), transparent 34%),
-    radial-gradient(ellipse at 44% 48%, rgba(175,185,193,0.14), transparent 38%),
-    radial-gradient(ellipse at 72% 56%, rgba(214,219,222,0.16), transparent 35%),
-    radial-gradient(ellipse at 91% 42%, rgba(177,186,194,0.13), transparent 31%);
-  will-change: transform, opacity;
+    linear-gradient(90deg, rgba(190,199,204,0.24) 0%, rgba(190,199,204,0.11) 25%, transparent 58%),
+    linear-gradient(270deg, rgba(183,193,199,0.23) 0%, rgba(183,193,199,0.10) 25%, transparent 58%),
+    linear-gradient(0deg, rgba(199,207,211,0.27) 0%, rgba(199,207,211,0.12) 28%, transparent 64%);
+  -webkit-backdrop-filter: blur(2.4px) saturate(0.94);
+  backdrop-filter: blur(2.4px) saturate(0.94);
+  -webkit-mask-image: radial-gradient(ellipse at center, transparent 0 30%, rgba(0,0,0,0.16) 43%, rgba(0,0,0,0.66) 69%, #000 100%);
+  mask-image: radial-gradient(ellipse at center, transparent 0 30%, rgba(0,0,0,0.16) 43%, rgba(0,0,0,0.66) 69%, #000 100%);
+  -webkit-mask-size: 185% 170%;
+  mask-size: 185% 170%;
+  opacity: 0.42;
+  animation: fog-closes-in 30s cubic-bezier(0.38, 0, 0.22, 1) infinite alternate;
 }
-.fog-one {
-  bottom: -7vh;
-  opacity: 0.84;
-  animation: fog-drift-one 34s ease-in-out infinite alternate;
+.site-fog::after {
+  background: radial-gradient(ellipse at center, rgba(210,216,219,0.08) 0%, rgba(194,202,207,0.13) 45%, rgba(174,185,192,0.22) 100%);
+  filter: blur(34px);
+  -webkit-mask-image: radial-gradient(ellipse at center, transparent 0 38%, rgba(0,0,0,0.15) 52%, #000 92%);
+  mask-image: radial-gradient(ellipse at center, transparent 0 38%, rgba(0,0,0,0.15) 52%, #000 92%);
+  -webkit-mask-size: 205% 185%;
+  mask-size: 205% 185%;
+  opacity: 0.24;
+  animation: fog-depth 42s ease-in-out 3s infinite alternate;
 }
-.fog-two {
-  bottom: 18vh;
-  opacity: 0.46;
-  transform: scale(1.12);
-  animation: fog-drift-two 48s ease-in-out infinite alternate;
+@keyframes fog-arrival {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
-.fog-three {
-  top: 8vh;
-  opacity: 0.25;
-  transform: scale(1.25);
-  animation: fog-drift-three 58s ease-in-out infinite alternate;
+@keyframes fog-closes-in {
+  0% {
+    -webkit-mask-size: 185% 170%;
+    mask-size: 185% 170%;
+    opacity: 0.34;
+    transform: scale(1.035);
+  }
+  52% {
+    -webkit-mask-size: 135% 126%;
+    mask-size: 135% 126%;
+    opacity: 0.50;
+    transform: scale(1.01);
+  }
+  100% {
+    -webkit-mask-size: 104% 102%;
+    mask-size: 104% 102%;
+    opacity: 0.68;
+    transform: scale(0.995);
+  }
 }
-@keyframes fog-drift-one {
-  0% { transform: translate3d(-7vw, 2vh, 0) scale(1.02); opacity: 0.62; }
-  50% { transform: translate3d(5vw, -1vh, 0) scale(1.08); opacity: 0.88; }
-  100% { transform: translate3d(12vw, 1vh, 0) scale(1.03); opacity: 0.68; }
-}
-@keyframes fog-drift-two {
-  0% { transform: translate3d(10vw, 0, 0) scale(1.12); opacity: 0.34; }
-  50% { transform: translate3d(-4vw, 2vh, 0) scale(1.18); opacity: 0.52; }
-  100% { transform: translate3d(-13vw, -1vh, 0) scale(1.10); opacity: 0.38; }
-}
-@keyframes fog-drift-three {
-  0% { transform: translate3d(-12vw, 0, 0) scale(1.25); opacity: 0.18; }
-  100% { transform: translate3d(9vw, 3vh, 0) scale(1.30); opacity: 0.30; }
+@keyframes fog-depth {
+  0% {
+    -webkit-mask-size: 205% 185%;
+    mask-size: 205% 185%;
+    opacity: 0.16;
+    transform: translate3d(-1.5%, 1%, 0) scale(1.045);
+  }
+  100% {
+    -webkit-mask-size: 116% 110%;
+    mask-size: 116% 110%;
+    opacity: 0.38;
+    transform: translate3d(1.5%, -1%, 0) scale(1);
+  }
 }
 body > header,
 body > main,
@@ -734,11 +762,15 @@ body > footer {
   z-index: 2;
 }
 @media (prefers-reduced-motion: reduce) {
-  .fog-layer { animation: none !important; }
-  .site-fog { opacity: 0.38; }
+  .site-fog { opacity: 0.72; animation: none; }
+  .site-fog::before,
+  .site-fog::after { animation: none; }
 }
 @media (max-width: 700px) {
-  .site-fog { opacity: 0.58; }
-  .fog-layer { filter: blur(26px); }
-  .fog-three { display: none; }
+  .site-fog::before {
+    -webkit-backdrop-filter: blur(1.6px) saturate(0.96);
+    backdrop-filter: blur(1.6px) saturate(0.96);
+    opacity: 0.48;
+  }
+  .site-fog::after { opacity: 0.18; filter: blur(24px); }
 }

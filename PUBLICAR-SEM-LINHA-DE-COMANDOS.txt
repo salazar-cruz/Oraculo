@@ -1,4 +1,4 @@
-ORÁCULO DA PALMA v1.5.9
+ORÁCULO DA PALMA v1.5.10
 PUBLICAÇÃO SEM LINHA DE COMANDOS
 
 NOVIDADES
@@ -53,7 +53,7 @@ E. TESTAR
 Abra:
 https://oraculo-da-palma-api.econsulting-cv.workers.dev/
 
-Deve aparecer version 1.5.9 e statistics configured true.
+Deve aparecer version 1.5.10 e statistics configured true.
 
 Depois abra:
 https://oraculo-da-palma-api.econsulting-cv.workers.dev/stats
