@@ -116,7 +116,7 @@ const TRANSLATIONS = {
     "how.step4Title": "A revelação",
     "how.step4Text": "Recebes uma interpretação simbólica das linhas visíveis, sem afirmações científicas.",
     "footer.concept": "Conceito de Salazar da Cruz",
-    "footer.version": "Versão 1.5.11",
+    "footer.version": "Versão 1.5.12",
     "error.imageRequired": "Seleciona uma fotografia nítida da palma da mão.",
     "error.nameRequired": "Escreve o teu nome antes de consultar o oráculo.",
     "error.invalidImage": "O ficheiro selecionado não é uma imagem válida.",
@@ -246,7 +246,7 @@ const TRANSLATIONS = {
     "how.step4Title": "The revelation",
     "how.step4Text": "You receive a symbolic interpretation of visible lines, without scientific claims.",
     "footer.concept": "Concept by Salazar da Cruz",
-    "footer.version": "Version 1.5.11",
+    "footer.version": "Version 1.5.12",
     "error.imageRequired": "Select a clear photograph of the palm of your hand.",
     "error.nameRequired": "Enter your name before consulting the oracle.",
     "error.invalidImage": "The selected file is not a valid image.",
@@ -376,7 +376,7 @@ const TRANSLATIONS = {
     "how.step4Title": "La révélation",
     "how.step4Text": "Vous recevez une interprétation symbolique des lignes visibles, sans affirmation scientifique.",
     "footer.concept": "Concept de Salazar da Cruz",
-    "footer.version": "Version 1.5.11",
+    "footer.version": "Version 1.5.12",
     "error.imageRequired": "Sélectionnez une photographie nette de la paume de votre main.",
     "error.nameRequired": "Saisissez votre nom avant de consulter l’oracle.",
     "error.invalidImage": "Le fichier sélectionné n’est pas une image valide.",
@@ -1177,168 +1177,6 @@ function initOracleEye() {
   updateTarget(window.innerWidth / 2, window.innerHeight / 2);
 }
 
-function initFog() {
-  const canvas = document.getElementById("fog-canvas");
-  if (!canvas) return;
-
-  const context = canvas.getContext("2d", { alpha: true });
-  if (!context) return;
-
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const ratio = Math.min(window.devicePixelRatio || 1, 1.25);
-  const blobs = [];
-  let width = window.innerWidth;
-  let height = window.innerHeight;
-  let startedAt = performance.now();
-  let lastFrame = 0;
-
-  function seededRandom(seed) {
-    const value = Math.sin(seed * 127.1 + 311.7) * 43758.5453123;
-    return value - Math.floor(value);
-  }
-
-  function buildBlobs() {
-    blobs.length = 0;
-    const sides = ["left", "right", "bottom"];
-    let seed = 1;
-
-    for (const side of sides) {
-      const count = side === "bottom" ? 9 : 11;
-      for (let index = 0; index < count; index += 1) {
-        const randomA = seededRandom(seed++);
-        const randomB = seededRandom(seed++);
-        const randomC = seededRandom(seed++);
-        const randomD = seededRandom(seed++);
-        blobs.push({
-          side,
-          lane: count === 1 ? 0.5 : index / (count - 1),
-          radius: 0.18 + randomA * 0.22,
-          stretch: 1.35 + randomB * 1.7,
-          alpha: 0.028 + randomC * 0.036,
-          delay: randomD * 0.42,
-          phase: seededRandom(seed++) * Math.PI * 2,
-          drift: 0.35 + seededRandom(seed++) * 0.55,
-          depth: seededRandom(seed++),
-          tilt: (seededRandom(seed++) - 0.5) * 0.55
-        });
-      }
-    }
-  }
-
-  function resize() {
-    width = window.innerWidth;
-    height = window.innerHeight;
-    canvas.width = Math.max(1, Math.floor(width * ratio));
-    canvas.height = Math.max(1, Math.floor(height * ratio));
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
-    context.setTransform(ratio, 0, 0, ratio, 0, 0);
-    buildBlobs();
-  }
-
-  function smoothstep(value) {
-    const clamped = Math.max(0, Math.min(1, value));
-    return clamped * clamped * (3 - 2 * clamped);
-  }
-
-  function rgba(alpha) {
-    return `rgba(205, 213, 217, ${alpha})`;
-  }
-
-  function drawFogBlob(blob, time, invasion) {
-    const localProgress = smoothstep((invasion - blob.delay) / Math.max(0.001, 1 - blob.delay));
-    if (localProgress <= 0.001) return;
-
-    const baseRadius = Math.max(width, height) * blob.radius;
-    const breathing = 1 + Math.sin(time * 0.00018 * blob.drift + blob.phase) * 0.08;
-    const sideways = Math.sin(time * 0.00011 * blob.drift + blob.phase) * width * 0.035;
-    const vertical = Math.cos(time * 0.00009 * blob.drift + blob.phase) * height * 0.022;
-
-    let x;
-    let y;
-
-    if (blob.side === "left") {
-      x = -baseRadius * 1.15 + localProgress * (width * (0.50 + blob.depth * 0.08) + baseRadius * 1.15);
-      y = height * (0.06 + blob.lane * 0.88) + vertical;
-      x += sideways * 0.45;
-    } else if (blob.side === "right") {
-      x = width + baseRadius * 1.15 - localProgress * (width * (0.50 + blob.depth * 0.08) + baseRadius * 1.15);
-      y = height * (0.06 + blob.lane * 0.88) - vertical;
-      x -= sideways * 0.45;
-    } else {
-      x = width * (0.04 + blob.lane * 0.92) + sideways;
-      y = height + baseRadius * 0.9 - localProgress * (height * (0.43 + blob.depth * 0.14) + baseRadius * 0.9);
-    }
-
-    const density = blob.alpha * (0.35 + localProgress * 0.95) * (0.88 + 0.12 * Math.sin(time * 0.00016 + blob.phase));
-
-    context.save();
-    context.translate(x, y);
-    context.rotate(blob.tilt + Math.sin(time * 0.000045 + blob.phase) * 0.08);
-    context.scale(blob.stretch, 1);
-
-    const gradient = context.createRadialGradient(0, 0, 0, 0, 0, baseRadius * breathing);
-    gradient.addColorStop(0, rgba(density));
-    gradient.addColorStop(0.28, rgba(density * 0.82));
-    gradient.addColorStop(0.58, rgba(density * 0.45));
-    gradient.addColorStop(0.82, rgba(density * 0.13));
-    gradient.addColorStop(1, rgba(0));
-
-    context.fillStyle = gradient;
-    context.beginPath();
-    context.arc(0, 0, baseRadius * breathing, 0, Math.PI * 2);
-    context.fill();
-    context.restore();
-  }
-
-  function drawCentralVeil(time, invasion) {
-    const veil = smoothstep((invasion - 0.38) / 0.62);
-    if (veil <= 0) return;
-
-    const pulse = 0.5 + Math.sin(time * 0.00011) * 0.5;
-    const gradient = context.createRadialGradient(
-      width * (0.5 + Math.sin(time * 0.000025) * 0.035),
-      height * (0.58 + Math.cos(time * 0.000021) * 0.025),
-      0,
-      width * 0.5,
-      height * 0.58,
-      Math.max(width, height) * 0.72
-    );
-    gradient.addColorStop(0, rgba((0.012 + pulse * 0.005) * veil));
-    gradient.addColorStop(0.5, rgba(0.022 * veil));
-    gradient.addColorStop(1, rgba(0));
-    context.fillStyle = gradient;
-    context.fillRect(0, 0, width, height);
-  }
-
-  function render(timestamp) {
-    if (!reducedMotion && timestamp - lastFrame < 40) {
-      requestAnimationFrame(render);
-      return;
-    }
-    lastFrame = timestamp;
-
-    context.clearRect(0, 0, width, height);
-    context.globalCompositeOperation = "screen";
-    context.filter = reducedMotion ? "blur(18px)" : "blur(24px)";
-
-    const elapsed = timestamp - startedAt;
-    const invasion = reducedMotion ? 0.68 : smoothstep(elapsed / 26000);
-
-    for (const blob of blobs) drawFogBlob(blob, timestamp, invasion);
-    drawCentralVeil(timestamp, invasion);
-
-    context.filter = "none";
-    context.globalCompositeOperation = "source-over";
-
-    if (!reducedMotion) requestAnimationFrame(render);
-  }
-
-  window.addEventListener("resize", resize, { passive: true });
-  resize();
-  requestAnimationFrame(render);
-}
-
 function drawStars() {
   const canvas = document.getElementById("stars");
   const context = canvas.getContext("2d");
@@ -1372,6 +1210,5 @@ function drawStars() {
 }
 
 initOracleEye();
-initFog();
 drawStars();
 loadStats();

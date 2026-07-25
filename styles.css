@@ -669,33 +669,3 @@ footer { border-top: 1px solid rgba(227,166,70,0.18); padding-block: 34px; backg
   transform: translate(calc(var(--gaze-x) * 4px), calc(var(--gaze-y) * 3px));
   transition: transform 58ms linear;
 }
-
-
-/* v1.5.11 — névoa procedural real, desenhada em canvas */
-.site-fog {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  opacity: 0;
-  mix-blend-mode: screen;
-  animation: fog-canvas-arrival 3.8s ease-out forwards;
-}
-@keyframes fog-canvas-arrival {
-  from { opacity: 0; }
-  to { opacity: 0.92; }
-}
-body > header,
-body > main,
-body > footer {
-  position: relative;
-  z-index: 2;
-}
-@media (prefers-reduced-motion: reduce) {
-  .site-fog { opacity: 0.62; animation: none; }
-}
-@media (max-width: 700px) {
-  .site-fog { opacity: 0.72; }
-}
