@@ -669,3 +669,29 @@ footer { border-top: 1px solid rgba(227,166,70,0.18); padding-block: 34px; backg
   transform: translate(calc(var(--gaze-x) * 4px), calc(var(--gaze-y) * 3px));
   transition: transform 58ms linear;
 }
+
+
+/* v1.6.0 — leitura detalhada em doze áreas */
+.result-subsection-heading {
+  margin: 48px 0 18px;
+  padding: 0 2px 14px;
+  border-bottom: 1px solid rgba(227,166,70,0.18);
+}
+.result-subsection-heading:first-of-type { margin-top: 38px; }
+.result-subsection-heading h3 {
+  margin: 5px 0 0;
+  color: #f2d59b;
+  font-family: var(--serif);
+  font-size: clamp(1.45rem, 2.2vw, 2rem);
+  font-weight: 500;
+}
+.result-grid-secondary .prophecy-card,
+.result-grid-details .prophecy-card { min-height: 250px; }
+.result-grid .prophecy-card > p:last-child {
+  white-space: pre-line;
+}
+@media (max-width: 700px) {
+  .result-subsection-heading { margin-top: 38px; }
+  .result-grid-secondary .prophecy-card,
+  .result-grid-details .prophecy-card { min-height: auto; }
+}

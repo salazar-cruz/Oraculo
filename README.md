@@ -1,4 +1,4 @@
-# Oráculo da Palma — v1.5.12
+# Oráculo da Palma — v1.6.0
 
 Aplicação web estática para GitHub Pages, com backend de visão no Cloudflare Worker e Groq.
 
@@ -21,3 +21,8 @@ Siga `PUBLICAR-SEM-LINHA-DE-COMANDOS.txt`.
 A base de dados Cloudflare D1 utiliza a ligação `STATS_DB`. Execute uma única vez o conteúdo de `D1-SCHEMA.sql` na consola da base de dados.
 
 Cada leitura concluída e aceite acrescenta uma unidade ao país identificado pela Cloudflare. Imagens recusadas não entram na contagem.
+
+
+NOVIDADE DA VERSÃO 1.6.0
+- A leitura passou de 4 para 12 áreas: 4 linhas principais, 4 linhas secundárias e 4 grupos de características visíveis da mão.
+- Esta versão exige também a actualização do Worker da Cloudflare com o ficheiro WORKER-CLOUDFLARE-COLAR-NO-EDITOR.js.

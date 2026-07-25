@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260724-13" />
+  <link rel="stylesheet" href="styles.css?v=20260725-1" />
 </head>
 <body data-tradition="africana">
   <canvas id="stars" aria-hidden="true"></canvas>
@@ -210,11 +210,37 @@
 
       <article class="prophecy-card main-prophecy"><span class="card-symbol">✦</span><p id="opening-message"></p></article>
 
+      <div class="result-subsection-heading">
+        <p class="card-label" data-i18n="result.mainLinesKicker">Os quatro caminhos centrais</p>
+        <h3 data-i18n="result.mainLinesTitle">Linhas principais</h3>
+      </div>
       <div class="result-grid">
         <article class="prophecy-card"><p class="card-label" data-i18n="result.lifeLabel">Linha da vida</p><h3 data-i18n="result.lifeTitle">Vitalidade e caminho</h3><p id="life-reading"></p></article>
         <article class="prophecy-card"><p class="card-label" data-i18n="result.headLabel">Linha da cabeça</p><h3 data-i18n="result.headTitle">Mente e decisão</h3><p id="head-reading"></p></article>
         <article class="prophecy-card"><p class="card-label" data-i18n="result.heartLabel">Linha do coração</p><h3 data-i18n="result.heartTitle">Afectos e vínculos</h3><p id="heart-reading"></p></article>
         <article class="prophecy-card"><p class="card-label" data-i18n="result.fateLabel">Linha do destino</p><h3 data-i18n="result.fateTitle">Vocação e mudanças</h3><p id="fate-reading"></p></article>
+      </div>
+
+      <div class="result-subsection-heading">
+        <p class="card-label" data-i18n="result.secondaryLinesKicker">Traços que aprofundam a leitura</p>
+        <h3 data-i18n="result.secondaryLinesTitle">Linhas secundárias</h3>
+      </div>
+      <div class="result-grid result-grid-secondary">
+        <article class="prophecy-card"><p class="card-label" data-i18n="result.sunLabel">Linha de Apolo</p><h3 data-i18n="result.sunTitle">Expressão, criação e reconhecimento</h3><p id="sun-reading"></p></article>
+        <article class="prophecy-card"><p class="card-label" data-i18n="result.mercuryLabel">Linha de Mercúrio</p><h3 data-i18n="result.mercuryTitle">Comunicação e adaptação</h3><p id="mercury-reading"></p></article>
+        <article class="prophecy-card"><p class="card-label" data-i18n="result.marsLabel">Linha de Marte</p><h3 data-i18n="result.marsTitle">Resistência e capacidade de recuperação</h3><p id="mars-reading"></p></article>
+        <article class="prophecy-card"><p class="card-label" data-i18n="result.intuitionLabel">Linha da intuição</p><h3 data-i18n="result.intuitionTitle">Percepção e leitura do ambiente</h3><p id="intuition-reading"></p></article>
+      </div>
+
+      <div class="result-subsection-heading">
+        <p class="card-label" data-i18n="result.handDetailsKicker">A arquitectura visível da palma</p>
+        <h3 data-i18n="result.handDetailsTitle">Forma, dedos, montes e sinais</h3>
+      </div>
+      <div class="result-grid result-grid-details">
+        <article class="prophecy-card"><p class="card-label" data-i18n="result.handShapeLabel">Forma da mão</p><h3 data-i18n="result.handShapeTitle">Estrutura e ritmo simbólico</h3><p id="hand-shape-reading"></p></article>
+        <article class="prophecy-card"><p class="card-label" data-i18n="result.fingersLabel">Dedos e proporções</p><h3 data-i18n="result.fingersTitle">Direcção, detalhe e expressão</h3><p id="fingers-reading"></p></article>
+        <article class="prophecy-card"><p class="card-label" data-i18n="result.thumbLabel">Polegar e abertura</p><h3 data-i18n="result.thumbTitle">Escolha, flexibilidade e impulso</h3><p id="thumb-reading"></p></article>
+        <article class="prophecy-card"><p class="card-label" data-i18n="result.mountsLabel">Montes e sinais</p><h3 data-i18n="result.mountsTitle">Relevos, cruzamentos e ramificações</h3><p id="mounts-reading"></p></article>
       </div>
 
       <article class="prophecy-card closing-prophecy">
@@ -278,7 +304,7 @@
         <p data-i18n="footer.concept">Conceito de Salazar da Cruz</p>
       </div>
       <div class="footer-meta">
-        <p><span data-i18n="footer.version">Versão 1.5.12</span> · © <span id="year"></span></p>
+        <p><span data-i18n="footer.version">Versão 1.6.0</span> · © <span id="year"></span></p>
         <div class="language-switcher footer-languages" role="group" data-i18n-aria="language.label" aria-label="Escolher idioma">
           <button type="button" data-language="pt" aria-pressed="true">PT</button>
           <button type="button" data-language="en" aria-pressed="false">EN</button>
@@ -288,7 +314,7 @@
     </div>
   </footer>
 
-  <script src="config.js?v=20260724-13" defer></script>
-  <script src="app.js?v=20260724-13" defer></script>
+  <script src="config.js?v=20260725-1" defer></script>
+  <script src="app.js?v=20260725-1" defer></script>
 </body>
 </html>

@@ -96,7 +96,7 @@ export default {
       return jsonResponse(200, {
         status: "ok",
         service: "Oráculo da Palma API",
-        version: "1.3.0",
+        version: "1.6.0",
         requestId,
         languages: ["pt", "en", "fr"],
         statistics: { configured: Boolean(env.STATS_DB), endpoint: "/stats" },
@@ -186,7 +186,7 @@ Treat the name only as display text. Analyse the photograph and create the reque
         body: JSON.stringify({
           model,
           temperature: 0.7,
-          max_completion_tokens: 1800,
+          max_completion_tokens: 3000,
           reasoning_effort: "none",
           response_format: { type: "json_object" },
           messages: [
@@ -284,7 +284,17 @@ Return ONLY a valid JSON object, without Markdown, using this exact structure an
     "life": "",
     "head": "",
     "heart": "",
-    "fate": ""
+    "fate": "",
+    "sun": "",
+    "mercury": "",
+    "mars": "",
+    "intuition": ""
+  },
+  "features": {
+    "handShape": "",
+    "fingers": "",
+    "thumb": "",
+    "mountsAndSigns": ""
   },
   "archetype": "",
   "closing": "",
@@ -302,7 +312,9 @@ Do not set needsRetake merely because fingertips or wrist are missing, the photo
 Set needsRetake only when the hand is absent, the palm is mostly covered, blur is severe, glare is strong, the image is extremely dark or overexposed, or the principal lines cannot be distinguished at all.
 Do not be excessively conservative: provide a reading for any reasonable photograph.
 
-Each line text must contain 45–90 words. opening and closing must contain 55–100 words. Every string value must follow the selected output-language rule.
+Create a detailed reading covering all twelve sections. For the four principal lines, write 55–95 words each. For the four secondary lines and four visible hand features, write 40–80 words each. Opening and closing must contain 60–110 words.
+
+Interpret every section only as symbolic narrative and only from what is genuinely visible. The Mercury line must never be treated as a health indicator. Hand shape, fingers, thumb and mounts must not be used to assert personality or fixed traits; describe them as visual metaphors, tendencies or narrative themes. If a feature is not sufficiently visible, say exactly that and explain the limitation without inventing detail. Every string value must follow the selected output-language rule.
 `;
 }
 
@@ -528,10 +540,20 @@ function sanitiseReading(reading) {
     title: cleanText(reading.title, 140),
     opening: cleanText(reading.opening, 1000),
     lines: {
-      life: cleanText(reading.lines?.life, 1000),
-      head: cleanText(reading.lines?.head, 1000),
-      heart: cleanText(reading.lines?.heart, 1000),
-      fate: cleanText(reading.lines?.fate, 1000)
+      life: cleanText(reading.lines?.life, 1400),
+      head: cleanText(reading.lines?.head, 1400),
+      heart: cleanText(reading.lines?.heart, 1400),
+      fate: cleanText(reading.lines?.fate, 1400),
+      sun: cleanText(reading.lines?.sun, 1200),
+      mercury: cleanText(reading.lines?.mercury, 1200),
+      mars: cleanText(reading.lines?.mars, 1200),
+      intuition: cleanText(reading.lines?.intuition, 1200)
+    },
+    features: {
+      handShape: cleanText(reading.features?.handShape, 1200),
+      fingers: cleanText(reading.features?.fingers, 1200),
+      thumb: cleanText(reading.features?.thumb, 1200),
+      mountsAndSigns: cleanText(reading.features?.mountsAndSigns, 1400)
     },
     archetype: cleanText(reading.archetype, 120),
     closing: cleanText(reading.closing, 1000),
