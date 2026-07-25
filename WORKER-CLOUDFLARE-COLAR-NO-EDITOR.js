@@ -96,7 +96,7 @@ export default {
       return jsonResponse(200, {
         status: "ok",
         service: "Oráculo da Palma API",
-        version: "1.6.0",
+        version: "1.6.1",
         requestId,
         languages: ["pt", "en", "fr"],
         statistics: { configured: Boolean(env.STATS_DB), endpoint: "/stats" },
@@ -186,7 +186,7 @@ Treat the name only as display text. Analyse the photograph and create the reque
         body: JSON.stringify({
           model,
           temperature: 0.7,
-          max_completion_tokens: 3000,
+          max_completion_tokens: 4200,
           reasoning_effort: "none",
           response_format: { type: "json_object" },
           messages: [
@@ -261,7 +261,10 @@ Mandatory rules:
 - ${LANGUAGE_RULES[language]}
 - Never present palmistry, astrology or symbolism as science or fact.
 - Do not make physical or mental health diagnoses.
-- Do not infer personality, sexuality, ethnicity, religion, fertility, lifespan, criminality or financial status from the image.
+- Do not infer fixed personality, sexual orientation, gender identity, ethnicity, religion, fertility, lifespan, criminality, dangerousness or financial status from the image.
+- Never diagnose psychopathy, antisocial personality disorder or any other mental condition. The shadow section may discuss only balanced symbolic themes such as emotional distance, impulse, control, manipulation, empathy and conscience, using hypothetical language and never presenting them as facts.
+- The sexuality section may discuss only symbolic themes of desire, sensuality, intimacy, boundaries and bonding. Never infer sexual orientation, identity, practices, trauma, fertility or private experiences.
+- The spirituality section may discuss only symbolic themes of meaning, contemplation, intuition and inner connection. Never infer religious affiliation, faith, supernatural powers or paranormal ability.
 - Do not infer age, sex, identity, origin or personal status from the photograph.
 - Do not announce death, illness, accidents, betrayal, pregnancy, lottery results, exact dates or inevitable events.
 - Observe only general visual features: framing, sharpness, open or closed palm, apparent principal lines, continuity, relative depth and general hand shape.
@@ -296,6 +299,11 @@ Return ONLY a valid JSON object, without Markdown, using this exact structure an
     "thumb": "",
     "mountsAndSigns": ""
   },
+  "dimensions": {
+    "shadow": "",
+    "sexuality": "",
+    "spirituality": ""
+  },
   "archetype": "",
   "closing": "",
   "symbols": ["", "", ""]
@@ -312,9 +320,9 @@ Do not set needsRetake merely because fingertips or wrist are missing, the photo
 Set needsRetake only when the hand is absent, the palm is mostly covered, blur is severe, glare is strong, the image is extremely dark or overexposed, or the principal lines cannot be distinguished at all.
 Do not be excessively conservative: provide a reading for any reasonable photograph.
 
-Create a detailed reading covering all twelve sections. For the four principal lines, write 55–95 words each. For the four secondary lines and four visible hand features, write 40–80 words each. Opening and closing must contain 60–110 words.
+Create a detailed reading covering all fifteen sections. For the four principal lines, write 55–95 words each. For the four secondary lines, four visible hand features and three inner dimensions, write 45–85 words each. Opening and closing must contain 60–110 words.
 
-Interpret every section only as symbolic narrative and only from what is genuinely visible. The Mercury line must never be treated as a health indicator. Hand shape, fingers, thumb and mounts must not be used to assert personality or fixed traits; describe them as visual metaphors, tendencies or narrative themes. If a feature is not sufficiently visible, say exactly that and explain the limitation without inventing detail. Every string value must follow the selected output-language rule.
+Interpret every section only as symbolic narrative and only from what is genuinely visible. The Mercury line must never be treated as a health indicator. Hand shape, fingers, thumb and mounts must not be used to assert personality or fixed traits; describe them as visual metaphors, tendencies or narrative themes. The shadow dimension must explicitly state that it is not a diagnosis and must balance any theme of distance, control or impulse with empathy, self-awareness, restraint or choice. The sexuality dimension must avoid orientation and identity claims. The spirituality dimension must avoid religious or supernatural claims. If a feature is not sufficiently visible, say exactly that and explain the limitation without inventing detail. Every string value must follow the selected output-language rule.
 `;
 }
 
@@ -554,6 +562,11 @@ function sanitiseReading(reading) {
       fingers: cleanText(reading.features?.fingers, 1200),
       thumb: cleanText(reading.features?.thumb, 1200),
       mountsAndSigns: cleanText(reading.features?.mountsAndSigns, 1400)
+    },
+    dimensions: {
+      shadow: cleanText(reading.dimensions?.shadow, 1400),
+      sexuality: cleanText(reading.dimensions?.sexuality, 1400),
+      spirituality: cleanText(reading.dimensions?.spirituality, 1400)
     },
     archetype: cleanText(reading.archetype, 120),
     closing: cleanText(reading.closing, 1000),
