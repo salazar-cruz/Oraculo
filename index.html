@@ -1,346 +1,216 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-PT">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Uma experiência misteriosa de leitura simbólica da palma, criada para entretenimento." />
-  <meta name="theme-color" content="#100904" />
-  <title>Oráculo da Palma — Leitura Simbólica</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260725-2" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#122a22">
+  <meta name="description" content="Uril de Cabo Verde — jogo tradicional, computador e salas online.">
+  <title>Uril de Cabo Verde</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css?v=0.0.6">
 </head>
-<body data-tradition="africana">
-  <canvas id="stars" aria-hidden="true"></canvas>
-  <div class="embers" aria-hidden="true"></div>
-  <div class="temple-shadow temple-shadow-left" aria-hidden="true"></div>
-  <div class="temple-shadow temple-shadow-right" aria-hidden="true"></div>
-
-  <header class="topbar">
-    <a class="brand" href="#inicio" aria-label="Oráculo da Palma">
-      <span class="brand-mark" aria-hidden="true"><span class="brand-eye"></span></span>
-      <span>
-        <strong>Oráculo da Palma</strong>
-        <small data-i18n="brand.subtitle">O portal das linhas ocultas</small>
-      </span>
-    </a>
-    <div class="topbar-actions">
-      <div class="language-switcher" role="group" data-i18n-aria="language.label" aria-label="Escolher idioma">
-        <button type="button" data-language="pt" aria-pressed="true">PT</button>
-        <button type="button" data-language="en" aria-pressed="false">EN</button>
-        <button type="button" data-language="fr" aria-pressed="false">FR</button>
+<body data-island="santiago">
+  <div class="island-background" aria-hidden="true"></div>
+  <div class="page-shell">
+    <header class="topbar">
+      <button class="brand" id="brandHome" type="button" aria-label="Voltar ao início">
+        <span class="brand-mark">U</span>
+        <span><strong>URIL</strong><small>CABO VERDE</small></span>
+      </button>
+      <div class="topbar-actions">
+        <span class="online-pill" id="onlinePill"><i></i><b id="onlineCount">0</b> jogadores online</span>
+        <button class="icon-button" id="rulesButton" type="button" title="Regras">?</button>
       </div>
-      <a class="top-link" href="#leitura" data-i18n="nav.enter">Entrar no oráculo</a>
-    </div>
-  </header>
+    </header>
 
-  <main>
-    <section id="inicio" class="hero shell">
-      <div class="ancient-arch" aria-hidden="true">
-        <span class="arch-rune rune-a">☾</span>
-        <span class="arch-rune rune-b">✦</span>
-        <span class="arch-rune rune-c">◇</span>
-      </div>
+    <main>
+      <section id="homeScreen" class="screen active">
+        <div class="hero-panel glass">
+          <div class="hero-copy">
+            <span class="eyebrow">VERSÃO ZERO</span>
+            <h1>O jogo tradicional,<br><em>ilha por ilha.</em></h1>
+            <p>Escolhe o teu nome de jogo, a tua ilha e entra numa mesa. Sem conta, sem formulários intermináveis.</p>
+          </div>
 
-      <div class="hero-copy">
-        <p class="eyebrow" data-i18n="hero.eyebrow">Uma câmara antiga abre-se diante de ti</p>
-        <h1 data-i18n="hero.title">As linhas da tua mão guardam ecos por decifrar.</h1>
-        <p class="hero-text" data-i18n="hero.text">
-          Revela a palma, escolhe o teu guia mítico e recebe uma interpretação simbólica criada a partir dos traços visíveis da mão.
-        </p>
-        <div class="hero-actions">
-          <a class="button button-primary" href="#leitura" data-i18n="hero.start">Iniciar o ritual</a>
-          <a class="button button-ghost" href="#como-funciona" data-i18n="hero.journey">Conhecer o percurso</a>
-        </div>
-        <p class="microcopy" data-i18n="hero.disclaimer">Experiência de entretenimento, sem valor científico, clínico ou divinatório.</p>
-      </div>
-
-      <div class="oracle-stage" aria-hidden="true">
-        <div class="altar-flame flame-left"></div>
-        <div class="altar-flame flame-right"></div>
-        <div class="oracle-disc">
-          <div class="oracle-eye" aria-hidden="true">
-            <span class="eye-aura"></span>
-            <span class="eye-core eye-core-round">
-              <span class="eye-iris"></span>
-              <span class="eye-pupil"></span>
-              <span class="eye-highlight eye-highlight-main"></span>
-              <span class="eye-highlight eye-highlight-small"></span>
-            </span>
+          <div class="profile-card">
+            <label for="nickInput">O teu nick</label>
+            <input id="nickInput" maxlength="18" autocomplete="nickname" placeholder="Ex.: Mindelense77">
+            <label for="islandSelect">A tua ilha</label>
+            <select id="islandSelect">
+              <option value="santiago">Santiago</option>
+              <option value="santo-antao">Santo Antão</option>
+              <option value="sao-vicente">São Vicente</option>
+              <option value="sao-nicolau">São Nicolau</option>
+              <option value="sal">Sal</option>
+              <option value="boa-vista">Boa Vista</option>
+              <option value="maio">Maio</option>
+              <option value="fogo">Fogo</option>
+              <option value="brava">Brava</option>
+              <option value="santa-luzia">Santa Luzia</option>
+            </select>
+            <p class="field-note" id="profileHint">O fundo acompanha a ilha escolhida.</p>
           </div>
         </div>
-      </div>
-    </section>
 
-    <section id="leitura" class="reading-section shell">
-      <div class="section-heading">
-        <p class="eyebrow" data-i18n="reading.eyebrow">O rito de entrada</p>
-        <h2 data-i18n="reading.title">Prepara a consulta</h2>
-        <p data-i18n="reading.intro">Três passos bastam: diz o teu nome, mostra a palma e escolhe quem te guiará.</p>
-      </div>
+        <div class="mode-grid">
+          <article class="mode-card glass featured">
+            <div class="mode-icon">◎</div>
+            <span class="mode-tag">JOGAR JÁ</span>
+            <h2>Contra o computador</h2>
+            <p>Treino individual com quatro níveis de dificuldade.</p>
+            <label for="levelSelect">Nível</label>
+            <select id="levelSelect">
+              <option value="apprentice">Aprendiz</option>
+              <option value="amateur" selected>Amador</option>
+              <option value="master">Mestre</option>
+              <option value="grandmaster">Grande Mestre</option>
+            </select>
+            <button class="primary-button" id="startPcButton" type="button">Começar partida</button>
+          </article>
 
-      <form id="palm-form" class="ritual-table" novalidate>
-        <section class="ritual-step name-step">
-          <div class="step-seal">I</div>
-          <div class="step-copy">
-            <p class="step-kicker" data-i18n="name.kicker">O nome à entrada</p>
-            <h3 data-i18n="name.title">Como te deve chamar o oráculo?</h3>
-            <p data-i18n="name.description">O nome serve apenas para tornar a leitura mais pessoal.</p>
-          </div>
-          <label class="field name-field">
-            <span data-i18n="name.label">O teu nome</span>
-            <input id="reader-name" name="readerName" type="text" autocomplete="name" minlength="2" maxlength="60" data-i18n-placeholder="name.placeholder" placeholder="Escreve o teu nome" required />
-          </label>
-        </section>
+          <article class="mode-card glass">
+            <div class="mode-icon">◉</div>
+            <span class="mode-tag">AO VIVO</span>
+            <h2>Salas online</h2>
+            <p>Cria uma mesa, desafia outro jogador ou entra apenas para assistir.</p>
+            <button class="secondary-button" id="openRoomsButton" type="button">Ver salas</button>
+          </article>
 
-        <section class="ritual-step upload-step">
-          <div class="step-seal">II</div>
-          <div class="step-copy">
-            <p class="step-kicker" data-i18n="image.kicker">A imagem da palma</p>
-            <h3 data-i18n="image.title">Mostra a mão sob uma luz clara</h3>
-            <p data-i18n="image.description">Mão aberta, fotografia de cima e linhas centrais visíveis.</p>
-          </div>
+          <article class="mode-card glass">
+            <div class="mode-icon">↔</div>
+            <span class="mode-tag">MESMO ECRÃ</span>
+            <h2>Dois jogadores</h2>
+            <p>Uma partida local, alternando no mesmo dispositivo.</p>
+            <button class="secondary-button" id="startLocalButton" type="button">Jogar localmente</button>
+          </article>
+        </div>
 
-          <div class="upload-layout">
-            <label class="dropzone" id="dropzone" for="palm-image">
-              <input id="palm-image" name="palmImage" type="file" accept="image/jpeg,image/png,image/webp" capture="environment" required />
-              <img id="preview" data-i18n-alt="image.previewAlt" alt="Pré-visualização da palma seleccionada" hidden />
-              <span class="upload-empty" id="upload-empty">
-                <span class="upload-symbol">✋</span>
-                <strong data-i18n="image.upload">Tirar fotografia ou carregar imagem</strong>
-                <small data-i18n="image.format">JPG, PNG ou WebP · até 12 MB</small>
-              </span>
-              <button class="remove-image" id="remove-image" type="button" hidden data-i18n="image.remove">Remover imagem</button>
-            </label>
-
-            <div class="photo-instructions">
-              <p class="instruction-title" data-i18n="image.instructionsTitle">Para o oráculo ver melhor</p>
-              <span data-i18n="image.instruction1">✦ palma totalmente aberta</span>
-              <span data-i18n="image.instruction2">✦ fotografia tirada de cima</span>
-              <span data-i18n="image.instruction3">✦ dedos afastados</span>
-              <span data-i18n="image.instruction4">✦ luz uniforme, sem reflexos</span>
-              <span data-i18n="image.instruction5">✦ fundo simples</span>
-              <span data-i18n="image.instruction6">✦ não incluir rosto nem documentos</span>
+        <section class="rooms-panel glass" id="roomsPanel" hidden>
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">SALAS ABERTAS</span>
+              <h2>Mesas de Uril</h2>
             </div>
-          </div>
-        </section>
-
-        <section class="ritual-step tradition-step">
-          <div class="step-seal">III</div>
-          <div class="step-copy">
-            <p class="step-kicker" data-i18n="tradition.kicker">O guia do limiar</p>
-            <h3 data-i18n="tradition.title">Escolhe a tradição da leitura</h3>
-            <p data-i18n="tradition.description">Cada figura conduz a narrativa por um caminho diferente.</p>
+            <button class="text-button" id="refreshRoomsButton" type="button">Actualizar</button>
           </div>
 
-          <fieldset class="traditions">
-            <legend class="sr-only" data-i18n="tradition.legend">Escolhe a tradição da leitura</legend>
+          <div class="create-room-row">
+            <input id="roomNameInput" maxlength="28" placeholder="Nome da sala">
+            <button class="primary-button compact" id="createRoomButton" type="button">Criar sala</button>
+          </div>
 
-            <label class="tradition-card">
-              <input type="radio" name="tradition" value="africana" checked />
-              <span class="figure-frame"><img src="assets/africano.webp" data-i18n-alt="tradition.africanAlt" alt="Figura fantástica de um feiticeiro africano" /></span>
-              <span class="tradition-copy"><small data-i18n="tradition.africanFigure">Feiticeiro Africano</small><strong data-i18n="tradition.africanName">Africana</strong><em data-i18n="tradition.africanDescription">Ancestralidade, terra, memória e continuidade.</em></span>
-              <span class="selection-sigil" aria-hidden="true">✦</span>
-            </label>
-
-            <label class="tradition-card">
-              <input type="radio" name="tradition" value="europeia" />
-              <span class="figure-frame"><img src="assets/europeu.webp" data-i18n-alt="tradition.europeanAlt" alt="Figura fantástica de um feiticeiro europeu" /></span>
-              <span class="tradition-copy"><small data-i18n="tradition.europeanFigure">Feiticeiro Europeu</small><strong data-i18n="tradition.europeanName">Europeia</strong><em data-i18n="tradition.europeanDescription">Quiromancia clássica, escolhas e ciclos.</em></span>
-              <span class="selection-sigil" aria-hidden="true">✦</span>
-            </label>
-
-            <label class="tradition-card">
-              <input type="radio" name="tradition" value="elfica" />
-              <span class="figure-frame"><img src="assets/elfico.webp" data-i18n-alt="tradition.elvenAlt" alt="Figura fantástica de um mago élfico" /></span>
-              <span class="tradition-copy"><small data-i18n="tradition.elvenFigure">Mago Élfico</small><strong data-i18n="tradition.elvenName">Élfica</strong><em data-i18n="tradition.elvenDescription">Florestas antigas, estrelas e rios de fantasia.</em></span>
-              <span class="selection-sigil" aria-hidden="true">✦</span>
-            </label>
-
-            <label class="tradition-card">
-              <input type="radio" name="tradition" value="magia-antiga" />
-              <span class="figure-frame"><img src="assets/elemental.webp" data-i18n-alt="tradition.elementalAlt" alt="Figura fantástica de um mago elemental" /></span>
-              <span class="tradition-copy"><small data-i18n="tradition.elementalFigure">Mago Elemental</small><strong data-i18n="tradition.elementalName">Magia Antiga</strong><em data-i18n="tradition.elementalDescription">Elementos, alquimia, selos e portais.</em></span>
-              <span class="selection-sigil" aria-hidden="true">✦</span>
-            </label>
-          </fieldset>
+          <div id="onlineSetupNotice" class="setup-notice" hidden>
+            As salas online ainda não estão ligadas ao Supabase. O jogo contra o computador e o modo local já funcionam. Consulta o ficheiro <strong>GUIA-GITHUB.md</strong> para activar esta área.
+          </div>
+          <div class="room-list" id="roomList"></div>
         </section>
+      </section>
 
-        <div class="ritual-action">
-          <p class="privacy-note" data-i18n="reading.privacy">Ao iniciar a leitura, a fotografia é enviada temporariamente para análise e usada apenas nesta experiência.</p>
-          <button class="button button-primary submit-button" id="submit-button" type="submit">
-            <span data-i18n="reading.submit">Consultar o oráculo</span><span aria-hidden="true">✦</span>
-          </button>
-          <p class="form-error" id="form-error" role="alert"></p>
+      <section id="gameScreen" class="screen">
+        <div class="game-layout">
+          <section class="game-main glass">
+            <div class="game-header">
+              <button class="text-button" id="leaveGameButton" type="button">← Sair da mesa</button>
+              <div class="room-title">
+                <span id="gameModeLabel">PARTIDA</span>
+                <h2 id="roomTitle">Mesa de Uril</h2>
+              </div>
+              <button class="secondary-button compact" id="newRoundButton" type="button" hidden>Arrumar agora</button>
+            </div>
+
+            <div class="match-strip">
+              <div class="player-summary north" id="northSummary">
+                <div class="avatar" id="northAvatar">N</div>
+                <div><strong id="northNick">Norte</strong><small id="northIsland">Cabo Verde</small></div>
+              </div>
+              <div class="match-counter">
+                <div class="quatro-box"><span>QUATROS</span><b id="northQuatros">0</b><i>—</i><b id="southQuatros">0</b></div>
+                <div class="run-score"><b id="northRun">0</b><span>CONTAGEM</span><b id="southRun">0</b></div>
+                <small id="cutStatus"></small>
+              </div>
+              <div class="player-summary south" id="southSummary">
+                <div><strong id="southNick">Sul</strong><small id="southIsland">Cabo Verde</small></div>
+                <div class="avatar" id="southAvatar">S</div>
+              </div>
+            </div>
+
+            <div class="score-row">
+              <span>Colhidas por Norte <b id="northScore">0</b></span>
+              <div id="turnBadge" class="turn-badge">Vez de Sul</div>
+              <span><b id="southScore">0</b> Colhidas por Sul</span>
+            </div>
+
+            <div class="board-wrap">
+              <div class="board" id="board" aria-label="Tabuleiro de Uril">
+                <div class="board-grain"></div>
+                <div class="pit-row north-row" id="northRow"></div>
+                <div class="board-centre">
+                  <span>URIL</span>
+                  <i>48 sementes · Cabo Verde</i>
+                </div>
+                <div class="pit-row south-row" id="southRow"></div>
+              </div>
+              <div class="round-result glass" id="roundResult" role="status" aria-live="assertive" hidden>
+                <span class="eyebrow">PARTIDA TERMINADA</span>
+                <strong id="roundResultTitle">Sul venceu a partida.</strong>
+                <b id="roundResultScore">Norte 0 — 0 Sul</b>
+                <small id="roundResultNext">O tabuleiro será arrumado.</small>
+              </div>
+            </div>
+
+            <div class="status-panel" id="statusPanel">
+              <strong id="statusTitle">A partida começou.</strong>
+              <span id="statusMessage">Sul joga primeiro.</span>
+            </div>
+          </section>
+
+          <aside class="game-sidebar">
+            <section class="glass sidebar-card">
+              <span class="eyebrow">ESTADO DA MESA</span>
+              <div class="room-status" id="roomStatus">Partida local</div>
+              <p id="matchMessage">A contagem começa em 0–0.</p>
+            </section>
+            <section class="glass sidebar-card">
+              <span class="eyebrow">ÚLTIMA JOGADA</span>
+              <p id="lastMoveText">Ainda não houve jogadas.</p>
+            </section>
+            <section class="glass sidebar-card rules-mini">
+              <span class="eyebrow">LEMBRETE</span>
+              <p>Distribuição anti-horária, sem deixar semente na casa de origem ao completar a volta. Colheita consecutiva de casas com 2 ou 3 sementes.</p>
+              <button class="text-button" id="sidebarRulesButton" type="button">Ler regras completas</button>
+              <p class="asset-credit">Tabuleiro e sementes do visual clássico: Oliver Merkel, licença CC BY-NC-SA 4.0.</p>
+            </section>
+          </aside>
         </div>
-      </form>
+      </section>
+    </main>
+  </div>
 
-      <details id="debug-panel" class="debug-panel" hidden>
-        <summary id="debug-summary" data-i18n="debug.title">Diagnóstico técnico</summary>
-        <div class="debug-toolbar">
-          <p data-i18n="debug.notice">A fotografia e a chave da API não são incluídas neste registo.</p>
-          <button id="copy-debug" class="button button-ghost button-small" type="button" data-i18n="debug.copy">Copiar diagnóstico</button>
-        </div>
-        <pre id="debug-output" tabindex="0"></pre>
-      </details>
-    </section>
-
-    <section id="oracle-loading" class="oracle-loading shell" hidden aria-live="polite">
-      <div class="loading-sigil"><span></span><span></span><span></span></div>
-      <p class="eyebrow" data-i18n="loading.eyebrow">A interpretar os sinais</p>
-      <h2 id="loading-title" data-i18n="loading.title">O oráculo observa as linhas da tua mão…</h2>
-      <p id="loading-message" data-i18n="loading.message">A luz percorre os traços visíveis e abre o caminho da tradição escolhida.</p>
-    </section>
-
-    <section id="result" class="result-section shell" hidden aria-live="polite">
-      <div class="result-header">
-        <div>
-          <p class="eyebrow" id="result-tradition">Leitura Africana</p>
-          <h2 id="result-title">A mensagem da tua palma</h2>
-        </div>
-        <div class="quality-badge"><span data-i18n="result.quality">Legibilidade da imagem</span><strong id="quality-score">—</strong></div>
-      </div>
-
-      <div id="retake-warning" class="retake-warning" hidden>
-        <strong data-i18n="result.retakeTitle">A imagem não está suficientemente clara.</strong>
-        <span id="retake-message">Repete a fotografia com mais luz e a palma totalmente aberta.</span>
-        <button id="retake-button" class="button button-ghost" type="button" data-i18n="result.retakeButton">Escolher outra imagem</button>
-      </div>
-
-      <article class="prophecy-card main-prophecy"><span class="card-symbol">✦</span><p id="opening-message"></p></article>
-
-      <div class="result-subsection-heading">
-        <p class="card-label" data-i18n="result.mainLinesKicker">Os quatro caminhos centrais</p>
-        <h3 data-i18n="result.mainLinesTitle">Linhas principais</h3>
-      </div>
-      <div class="result-grid">
-        <article class="prophecy-card"><p class="card-label" data-i18n="result.lifeLabel">Linha da vida</p><h3 data-i18n="result.lifeTitle">Vitalidade e caminho</h3><p id="life-reading"></p></article>
-        <article class="prophecy-card"><p class="card-label" data-i18n="result.headLabel">Linha da cabeça</p><h3 data-i18n="result.headTitle">Mente e decisão</h3><p id="head-reading"></p></article>
-        <article class="prophecy-card"><p class="card-label" data-i18n="result.heartLabel">Linha do coração</p><h3 data-i18n="result.heartTitle">Afectos e vínculos</h3><p id="heart-reading"></p></article>
-        <article class="prophecy-card"><p class="card-label" data-i18n="result.fateLabel">Linha do destino</p><h3 data-i18n="result.fateTitle">Vocação e mudanças</h3><p id="fate-reading"></p></article>
-      </div>
-
-      <div class="result-subsection-heading">
-        <p class="card-label" data-i18n="result.secondaryLinesKicker">Traços que aprofundam a leitura</p>
-        <h3 data-i18n="result.secondaryLinesTitle">Linhas secundárias</h3>
-      </div>
-      <div class="result-grid result-grid-secondary">
-        <article class="prophecy-card"><p class="card-label" data-i18n="result.sunLabel">Linha de Apolo</p><h3 data-i18n="result.sunTitle">Expressão, criação e reconhecimento</h3><p id="sun-reading"></p></article>
-        <article class="prophecy-card"><p class="card-label" data-i18n="result.mercuryLabel">Linha de Mercúrio</p><h3 data-i18n="result.mercuryTitle">Comunicação e adaptação</h3><p id="mercury-reading"></p></article>
-        <article class="prophecy-card"><p class="card-label" data-i18n="result.marsLabel">Linha de Marte</p><h3 data-i18n="result.marsTitle">Resistência e capacidade de recuperação</h3><p id="mars-reading"></p></article>
-        <article class="prophecy-card"><p class="card-label" data-i18n="result.intuitionLabel">Linha da intuição</p><h3 data-i18n="result.intuitionTitle">Percepção e leitura do ambiente</h3><p id="intuition-reading"></p></article>
-      </div>
-
-      <div class="result-subsection-heading">
-        <p class="card-label" data-i18n="result.handDetailsKicker">A arquitectura visível da palma</p>
-        <h3 data-i18n="result.handDetailsTitle">Forma, dedos, montes e sinais</h3>
-      </div>
-      <div class="result-grid result-grid-details">
-        <article class="prophecy-card"><p class="card-label" data-i18n="result.handShapeLabel">Forma da mão</p><h3 data-i18n="result.handShapeTitle">Estrutura e ritmo simbólico</h3><p id="hand-shape-reading"></p></article>
-        <article class="prophecy-card"><p class="card-label" data-i18n="result.fingersLabel">Dedos e proporções</p><h3 data-i18n="result.fingersTitle">Direcção, detalhe e expressão</h3><p id="fingers-reading"></p></article>
-        <article class="prophecy-card"><p class="card-label" data-i18n="result.thumbLabel">Polegar e abertura</p><h3 data-i18n="result.thumbTitle">Escolha, flexibilidade e impulso</h3><p id="thumb-reading"></p></article>
-        <article class="prophecy-card"><p class="card-label" data-i18n="result.mountsLabel">Montes e sinais</p><h3 data-i18n="result.mountsTitle">Relevos, cruzamentos e ramificações</h3><p id="mounts-reading"></p></article>
-      </div>
-
-      <div class="result-subsection-heading">
-        <p class="card-label" data-i18n="result.innerDimensionsKicker">Dimensões íntimas e de sombra</p>
-        <h3 data-i18n="result.innerDimensionsTitle">Sombra, intimidade e espiritualidade</h3>
-        <p class="result-safety-note" data-i18n="result.innerDimensionsNote">Estas interpretações são metáforas narrativas. Não constituem diagnóstico psicológico, não identificam orientação sexual e não determinam crenças religiosas.</p>
-      </div>
-      <div class="result-grid result-grid-inner">
-        <article class="prophecy-card sensitive-card">
-          <p class="card-label" data-i18n="result.shadowLabel">Tendências psicopáticas — leitura simbólica</p>
-          <h3 data-i18n="result.shadowTitle">Frieza, impulso, controlo e empatia</h3>
-          <p id="shadow-reading"></p>
-          <p class="card-disclaimer" data-i18n="result.shadowDisclaimer">Não é diagnóstico de psicopatia nem avaliação de perigosidade.</p>
-        </article>
-        <article class="prophecy-card sensitive-card">
-          <p class="card-label" data-i18n="result.sexualityLabel">Sexualidade e intimidade</p>
-          <h3 data-i18n="result.sexualityTitle">Desejo, sensualidade, limites e vínculo</h3>
-          <p id="sexuality-reading"></p>
-          <p class="card-disclaimer" data-i18n="result.sexualityDisclaimer">Não infere orientação sexual, identidade, práticas ou experiências pessoais.</p>
-        </article>
-        <article class="prophecy-card sensitive-card">
-          <p class="card-label" data-i18n="result.spiritualityLabel">Espiritualidade</p>
-          <h3 data-i18n="result.spiritualityTitle">Sentido, contemplação e ligação interior</h3>
-          <p id="spirituality-reading"></p>
-          <p class="card-disclaimer" data-i18n="result.spiritualityDisclaimer">Não identifica religião, fé ou capacidade sobrenatural.</p>
-        </article>
-      </div>
-
-      <article class="prophecy-card closing-prophecy">
-        <p class="card-label" data-i18n="result.archetypeLabel">Arquétipo revelado</p>
-        <h3 id="archetype"></h3>
-        <p id="closing-message"></p>
-        <div id="symbols-row" class="symbols-row"></div>
-      </article>
-
-      <div class="result-actions">
-        <button id="share-reading" class="button button-primary" type="button" data-i18n="result.share">Partilhar leitura</button>
-        <button id="new-reading" class="button button-ghost" type="button" data-i18n="result.new">Nova consulta</button>
-      </div>
-      <p id="result-language-note" class="result-language-note" hidden></p>
-    </section>
-
-    <section id="estatisticas" class="stats-section shell">
-      <div class="section-heading stats-heading">
-        <p class="eyebrow" data-i18n="stats.eyebrow">O mapa dos destinos</p>
-        <h2 data-i18n="stats.title">O oráculo atravessa fronteiras</h2>
-        <p data-i18n="stats.intro">Cada leitura concluída acende um ponto no mapa. As contagens são agregadas por país; não são guardados endereços IP, nomes ou fotografias.</p>
-      </div>
-
-      <div class="stats-overview">
-        <article class="stat-card">
-          <span class="stat-symbol" aria-hidden="true">✦</span>
-          <strong id="stats-total">—</strong>
-          <p data-i18n="stats.totalLabel">Leituras concluídas</p>
-        </article>
-        <article class="stat-card">
-          <span class="stat-symbol" aria-hidden="true">◇</span>
-          <strong id="stats-countries">—</strong>
-          <p data-i18n="stats.countriesLabel">Países alcançados</p>
-        </article>
-      </div>
-
-      <div id="country-stats" class="country-stats" aria-live="polite">
-        <p id="stats-status" class="stats-status" data-i18n="stats.loading">A consultar o livro dos destinos…</p>
-      </div>
-      <button id="toggle-stats" class="button button-ghost button-small stats-toggle" type="button" hidden data-i18n="stats.showAll">Ver todos os países</button>
-    </section>
-
-    <section id="como-funciona" class="how-section shell">
-      <div class="section-heading">
-        <p class="eyebrow" data-i18n="how.eyebrow">O percurso</p>
-        <h2 data-i18n="how.title">Como decorre a leitura</h2>
-      </div>
-      <div class="steps-grid">
-        <article><span>I</span><h3 data-i18n="how.step1Title">O teu nome</h3><p data-i18n="how.step1Text">O oráculo usa-o apenas para falar contigo de forma directa.</p></article>
-        <article><span>II</span><h3 data-i18n="how.step2Title">A fotografia</h3><p data-i18n="how.step2Text">A palma é preparada no navegador e enviada em resolução adequada à leitura.</p></article>
-        <article><span>III</span><h3 data-i18n="how.step3Title">O guia mítico</h3><p data-i18n="how.step3Text">A tradição escolhida define a atmosfera e a linguagem da narrativa.</p></article>
-        <article><span>IV</span><h3 data-i18n="how.step4Title">A revelação</h3><p data-i18n="how.step4Text">Recebes uma interpretação simbólica das linhas visíveis, sem afirmações científicas.</p></article>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="shell footer-inner">
-      <div>
-        <strong>Oráculo da Palma</strong>
-        <p data-i18n="footer.concept">Conceito de Salazar da Cruz</p>
-      </div>
-      <div class="footer-meta">
-        <p><span data-i18n="footer.version">Versão 1.6.1</span> · © <span id="year"></span></p>
-        <div class="language-switcher footer-languages" role="group" data-i18n-aria="language.label" aria-label="Escolher idioma">
-          <button type="button" data-language="pt" aria-pressed="true">PT</button>
-          <button type="button" data-language="en" aria-pressed="false">EN</button>
-          <button type="button" data-language="fr" aria-pressed="false">FR</button>
-        </div>
-      </div>
+  <dialog id="rulesDialog">
+    <div class="dialog-head">
+      <div><span class="eyebrow">REGULAMENTO V0</span><h2>Regras do Uril de Cabo Verde</h2></div>
+      <button class="icon-button" id="closeRulesButton" type="button">×</button>
     </div>
-  </footer>
+    <div class="rules-content">
+      <ol>
+        <li><strong>Tabuleiro.</strong> São 12 casas, seis para Sul e seis para Norte, com quatro sementes em cada casa.</li>
+        <li><strong>Orientação.</strong> Sul joga na fila inferior e Norte na fila superior. A distribuição segue o sentido anti-horário. A casa 6 de cada lado encosta à casa 1 do adversário.</li>
+        <li><strong>Sementeira.</strong> Escolhem-se todas as sementes de uma casa própria e distribui-se uma por casa. Quando a volta passa novamente pela casa de origem, essa casa é saltada.</li>
+        <li><strong>Casa com uma semente.</strong> Qualquer casa própria com uma ou mais sementes é jogável. A única excepção surge quando o adversário está sem sementes: nesse caso escolhe-se uma jogada que o alimente, quando existe.</li>
+        <li><strong>Colheita.</strong> Quando a última semente termina numa casa adversária com 2 ou 3 sementes, colhe-se essa casa e continuam a colher-se, para trás, as casas adversárias consecutivas que também tenham 2 ou 3.</li>
+        <li><strong>Alimentação.</strong> Quando o campo do adversário está vazio, o jogador tem de escolher uma casa cuja sementeira deixe pelo menos uma semente no campo adversário. Se nenhuma jogada conseguir alimentá-lo, a partida termina.</li>
+        <li><strong>As seis casas.</strong> É admitida a colheita das seis casas adversárias. Se o adversário ficar sem qualquer jogada depois dessa colheita, a partida termina e as sementes restantes são contabilizadas.</li>
+        <li><strong>Fim.</strong> A partida termina quando alguém alcança 25 sementes, após uma colheita das seis casas que deixe o adversário sem jogada, ou quando não existe nenhuma jogada de alimentação. Com 24–24 há empate.</li>
+        <li><strong>O Quatro.</strong> A contagem pertence ao vencedor da última partida e regressa a 1–0 quando muda de jogador. Quatro vitórias consecutivas marcam um <em>Quatro</em>.</li>
+        <li><strong>Corte depois do Quatro.</strong> O adversário só corta a contagem com duas vitórias consecutivas, passando a liderar por 2–0. O Quatro já marcado continua registado.</li>
+      </ol>
+      <p class="rules-note">Esta é a interpretação operacional usada na versão zero. O regulamento fica isolado no motor do jogo para facilitar correcções após validação com mestres de Uril.</p>
+    </div>
+  </dialog>
 
-  <script src="config.js?v=20260725-2" defer></script>
-  <script src="app.js?v=20260725-2" defer></script>
+  <div class="toast" id="toast" role="status"></div>
+
+  <script type="module" src="js/app.js?v=0.0.6"></script>
 </body>
 </html>
