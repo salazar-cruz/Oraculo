@@ -1,4 +1,4 @@
-ORÁCULO DA PALMA v1.6.1
+ORÁCULO DA PALMA v1.6.2
 PUBLICAÇÃO SEM LINHA DE COMANDOS
 
 NOVIDADES
@@ -53,7 +53,7 @@ E. TESTAR
 Abra:
 https://oraculo-da-palma-api.econsulting-cv.workers.dev/
 
-Deve aparecer version 1.6.1 e statistics configured true.
+Deve aparecer version 1.6.2 e statistics configured true.
 
 Depois abra:
 https://oraculo-da-palma-api.econsulting-cv.workers.dev/stats
@@ -64,6 +64,6 @@ NOTA
 Caso a ligação STATS_DB ainda não esteja feita, as leituras continuam a funcionar. Apenas a secção de estatísticas indica que o livro de registos ainda não está ligado.
 
 
-NOVIDADE DA VERSÃO 1.6.1
+NOVIDADE DA VERSÃO 1.6.2
 - A leitura passou de 4 para 12 áreas: 4 linhas principais, 4 linhas secundárias e 4 grupos de características visíveis da mão.
 - Esta versão exige também a actualização do Worker da Cloudflare com o ficheiro WORKER-CLOUDFLARE-COLAR-NO-EDITOR.js.

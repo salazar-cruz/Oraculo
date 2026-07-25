@@ -1,4 +1,4 @@
-# Oráculo da Palma — v1.6.1
+# Oráculo da Palma — v1.6.2
 
 Aplicação web estática para GitHub Pages, com backend de visão no Cloudflare Worker e Groq.
 
@@ -23,11 +23,15 @@ A base de dados Cloudflare D1 utiliza a ligação `STATS_DB`. Execute uma única
 Cada leitura concluída e aceite acrescenta uma unidade ao país identificado pela Cloudflare. Imagens recusadas não entram na contagem.
 
 
-NOVIDADE DA VERSÃO 1.6.1
+NOVIDADE DA VERSÃO 1.6.2
 - A leitura passou de 4 para 12 áreas: 4 linhas principais, 4 linhas secundárias e 4 grupos de características visíveis da mão.
 - Esta versão exige também a actualização do Worker da Cloudflare com o ficheiro WORKER-CLOUDFLARE-COLAR-NO-EDITOR.js.
 
 
-## Versão 1.6.1
+## Versão 1.6.2
 
 Acrescenta três dimensões narrativas: sombra e controlo, sexualidade e intimidade, e espiritualidade. Estas secções são simbólicas e incluem avisos contra diagnóstico psicológico, inferência de orientação sexual e identificação de crença religiosa.
+
+
+## Partilha completa
+A partilha inclui todas as secções da leitura, o arquétipo, os símbolos, a conclusão e o endereço do site numa única mensagem. Em navegadores sem partilha nativa, o texto integral é copiado ou descarregado como TXT.

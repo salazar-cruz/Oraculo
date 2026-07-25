@@ -121,6 +121,8 @@ const TRANSLATIONS = {
     "result.shareTitle": "Oráculo da Palma",
     "result.shareFallback": "A minha leitura da palma",
     "result.archetypeShare": "Arquétipo",
+    "result.symbolsLabel": "Símbolos revelados",
+    "result.shareFromSite": "Leitura criada em:",
     "result.languageNote": "A leitura atual foi criada em {language}. Inicia uma nova consulta para receber o texto neste idioma.",
     "tradition.result.africana": "Leitura Africana",
     "tradition.result.europeia": "Leitura Europeia",
@@ -150,7 +152,7 @@ const TRANSLATIONS = {
     "how.step4Title": "A revelação",
     "how.step4Text": "Recebes uma interpretação simbólica das linhas visíveis, sem afirmações científicas.",
     "footer.concept": "Conceito de Salazar da Cruz",
-    "footer.version": "Versão 1.6.1",
+    "footer.version": "Versão 1.6.2",
     "error.imageRequired": "Seleciona uma fotografia nítida da palma da mão.",
     "error.nameRequired": "Escreve o teu nome antes de consultar o oráculo.",
     "error.invalidImage": "O ficheiro selecionado não é uma imagem válida.",
@@ -285,6 +287,8 @@ const TRANSLATIONS = {
     "result.shareTitle": "Oracle of the Palm",
     "result.shareFallback": "My palm reading",
     "result.archetypeShare": "Archetype",
+    "result.symbolsLabel": "Revealed symbols",
+    "result.shareFromSite": "Reading created at:",
     "result.languageNote": "The current reading was created in {language}. Start a new consultation to receive the text in this language.",
     "tradition.result.africana": "African Reading",
     "tradition.result.europeia": "European Reading",
@@ -314,7 +318,7 @@ const TRANSLATIONS = {
     "how.step4Title": "The revelation",
     "how.step4Text": "You receive a symbolic interpretation of visible lines, without scientific claims.",
     "footer.concept": "Concept by Salazar da Cruz",
-    "footer.version": "Version 1.6.1",
+    "footer.version": "Version 1.6.2",
     "error.imageRequired": "Select a clear photograph of the palm of your hand.",
     "error.nameRequired": "Enter your name before consulting the oracle.",
     "error.invalidImage": "The selected file is not a valid image.",
@@ -449,6 +453,8 @@ const TRANSLATIONS = {
     "result.shareTitle": "Oracle de la Paume",
     "result.shareFallback": "Ma lecture de la paume",
     "result.archetypeShare": "Archétype",
+    "result.symbolsLabel": "Symboles révélés",
+    "result.shareFromSite": "Lecture créée sur :",
     "result.languageNote": "La lecture actuelle a été créée en {language}. Commencez une nouvelle consultation pour recevoir le texte dans cette langue.",
     "tradition.result.africana": "Lecture Africaine",
     "tradition.result.europeia": "Lecture Européenne",
@@ -478,7 +484,7 @@ const TRANSLATIONS = {
     "how.step4Title": "La révélation",
     "how.step4Text": "Vous recevez une interprétation symbolique des lignes visibles, sans affirmation scientifique.",
     "footer.concept": "Concept de Salazar da Cruz",
-    "footer.version": "Version 1.6.1",
+    "footer.version": "Version 1.6.2",
     "error.imageRequired": "Sélectionnez une photographie nette de la paume de votre main.",
     "error.nameRequired": "Saisissez votre nom avant de consulter l’oracle.",
     "error.invalidImage": "Le fichier sélectionné n’est pas une image valide.",
@@ -1098,21 +1104,105 @@ function resetToForm() {
   document.getElementById("leitura").scrollIntoView({ behavior: "smooth" });
 }
 
+function buildCompleteReadingText(reading) {
+  const clean = (value) => String(value || "").trim();
+  const section = (labelKey, value, disclaimerKey = null) => {
+    const body = clean(value) || t("result.lineNotVisible");
+    const disclaimer = disclaimerKey ? `
+${t(disclaimerKey)}` : "";
+    return `${t(labelKey).toUpperCase()}
+${body}${disclaimer}`;
+  };
+
+  const symbols = Array.isArray(reading.symbols)
+    ? reading.symbols.map(clean).filter(Boolean).join(" · ")
+    : "";
+
+  const parts = [
+    clean(reading.title) || t("result.shareFallback"),
+    clean(reading.opening),
+    `— ${t("result.mainLinesTitle")} —`,
+    section("result.lifeLabel", reading.lines?.life),
+    section("result.headLabel", reading.lines?.head),
+    section("result.heartLabel", reading.lines?.heart),
+    section("result.fateLabel", reading.lines?.fate),
+    `— ${t("result.secondaryLinesTitle")} —`,
+    section("result.sunLabel", reading.lines?.sun),
+    section("result.mercuryLabel", reading.lines?.mercury),
+    section("result.marsLabel", reading.lines?.mars),
+    section("result.intuitionLabel", reading.lines?.intuition),
+    `— ${t("result.handDetailsTitle")} —`,
+    section("result.handShapeLabel", reading.features?.handShape),
+    section("result.fingersLabel", reading.features?.fingers),
+    section("result.thumbLabel", reading.features?.thumb),
+    section("result.mountsLabel", reading.features?.mountsAndSigns),
+    `— ${t("result.innerDimensionsTitle")} —`,
+    section("result.shadowLabel", reading.dimensions?.shadow, "result.shadowDisclaimer"),
+    section("result.sexualityLabel", reading.dimensions?.sexuality, "result.sexualityDisclaimer"),
+    section("result.spiritualityLabel", reading.dimensions?.spirituality, "result.spiritualityDisclaimer"),
+    `${t("result.archetypeLabel").toUpperCase()}
+${clean(reading.archetype) || t("result.defaultArchetype")}`,
+    symbols ? `${t("result.symbolsLabel").toUpperCase()}
+${symbols}` : "",
+    clean(reading.closing),
+    `${t("result.shareFromSite")}
+${window.location.origin}${window.location.pathname}`
+  ];
+
+  return parts.filter(Boolean).join("\n\n");
+}
+
+function downloadReadingText(text) {
+  const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "leitura-completa-oraculo-da-palma.txt";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function showShareCopiedState() {
+  const button = document.getElementById("share-reading");
+  const original = button.textContent;
+  button.textContent = t("result.copied");
+  setTimeout(() => { button.textContent = original; }, 1800);
+}
+
 async function shareReading() {
   if (!latestReading) return;
-  const text = `${latestReading.title || t("result.shareFallback")}\n\n${latestReading.opening || ""}\n\n${t("result.archetypeShare")}: ${latestReading.archetype || ""}`;
+  const text = buildCompleteReadingText(latestReading);
+
   try {
     if (navigator.share) {
-      await navigator.share({ title: t("result.shareTitle"), text, url: window.location.href });
-    } else {
-      await navigator.clipboard.writeText(text);
-      const button = document.getElementById("share-reading");
-      const original = button.textContent;
-      button.textContent = t("result.copied");
-      setTimeout(() => { button.textContent = original; }, 1800);
+      // O endereço segue dentro do texto. Algumas aplicações descartam o texto
+      // quando o URL é enviado como campo separado.
+      await navigator.share({ title: t("result.shareTitle"), text });
+      return;
     }
-  } catch {
-    // O cancelamento da partilha não exige mensagem de erro.
+
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      showShareCopiedState();
+      return;
+    }
+
+    downloadReadingText(text);
+  } catch (error) {
+    if (error?.name === "AbortError") return;
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        showShareCopiedState();
+      } else {
+        downloadReadingText(text);
+      }
+    } catch {
+      downloadReadingText(text);
+    }
   }
 }
 
