@@ -98,7 +98,7 @@ export default {
       return jsonResponse(200, {
         status: "ok",
         service: "Oráculo da Palma API",
-        version: "1.7.3",
+        version: "1.7.4",
         requestId,
         languages: ["pt", "en", "fr"],
         statistics: { configured: Boolean(env.STATS_DB), endpoint: "/stats" },
