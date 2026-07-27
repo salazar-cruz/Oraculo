@@ -1,5 +1,5 @@
 const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
-const ALLOWED_TRADITIONS = new Set(["africana", "europeia", "elfica", "magia-antiga"]);
+const ALLOWED_TRADITIONS = new Set(["africana", "europeia", "elfica", "antiga", "islamica", "budista"]);
 const SUPPORTED_LANGUAGES = new Set(["pt", "en", "fr"]);
 const RETAKE_HARD_THRESHOLD = 30;
 const RETAKE_MODEL_THRESHOLD = 40;
@@ -53,10 +53,12 @@ const ERROR_MESSAGES = {
 };
 
 const traditionGuides = {
-  africana: "Create a dignified symbolic reading inspired by ancestry, earth, cycles, community, memory and continuity. Do not attribute it to a specific African culture, invent real rituals or present Africa as a single tradition.",
-  europeia: "Create a restrained and elegant reading inspired by classical European palmistry, paths, choices, character and life cycles, without asserting supernatural certainty.",
-  elfica: "Create an entirely fictional reading inspired by ancient forests, stars, rivers, trees, moons and imaginary elven peoples. Keep it clearly fantastical and do not imitate protected fictional universes.",
-  "magia-antiga": "Create a fictional hermetic reading inspired by alchemy, constellations, metals, portals, seals and ancient libraries. Do not give instructions for real magic, dangerous rituals or factual predictions."
+  africana: "The narrator is Master Kamba. Create a dignified symbolic reading inspired broadly by ancestry, earth, community, memory, oral wisdom and continuity. Use warm images of roots, drums, paths, fire and generations, but do not attribute the reading to a specific African people, invent real rituals or present Africa as one uniform culture.",
+  europeia: "The narrator is Master Cagliostro. Create a restrained and elegant reading inspired by classical European palmistry, Renaissance symbolism, alchemy, paths, choices, character and life cycles. Use images of mirrors, compasses, libraries, metals and constellations without asserting supernatural certainty.",
+  elfica: "The narrator is Master Elorand. Create an entirely fictional reading inspired by ancient forests, stars, rivers, trees, moons and imaginary elven peoples. Use lyrical natural imagery, keep it clearly fantastical and do not imitate any protected fictional universe.",
+  antiga: "The narrator is Master Malakor. Create a fictional primordial and hermetic reading inspired by ancient seals, metals, portals, forgotten cities, constellations and hidden libraries. Keep it solemn and mysterious. Do not give instructions for real magic, dangerous rituals or factual predictions.",
+  islamica: "The narrator is Master Hikma. Create a respectful symbolic reading inspired by the historical arts of geometry, astronomy, proportion, gardens, light, knowledge and contemplation across Islamic civilisations. Avoid invented scripture, false quotations, religious rulings, sacred claims, divination attributed to Islam or imitation of Quranic text.",
+  budista: "The narrator is Master Tara. Create a calm symbolic reading inspired by compassion, mindfulness, impermanence, balance, the lotus, the wheel and the inner path across Buddhist artistic traditions. Avoid claiming Buddhist doctrine, karma, rebirth, enlightenment or spiritual attainment as facts about the user."
 };
 
 export default {
@@ -96,7 +98,7 @@ export default {
       return jsonResponse(200, {
         status: "ok",
         service: "Oráculo da Palma API",
-        version: "1.6.1",
+        version: "1.7.0",
         requestId,
         languages: ["pt", "en", "fr"],
         statistics: { configured: Boolean(env.STATS_DB), endpoint: "/stats" },

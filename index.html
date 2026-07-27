@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20260725-162" />
+  <link rel="stylesheet" href="styles.css?v=20260727-170" />
 </head>
 <body data-tradition="africana">
   <canvas id="stars" aria-hidden="true"></canvas>
@@ -137,31 +137,51 @@
           <fieldset class="traditions">
             <legend class="sr-only" data-i18n="tradition.legend">Escolhe a tradição da leitura</legend>
 
-            <label class="tradition-card">
+            <label class="tradition-card tradition-africana" data-guide="kamba">
               <input type="radio" name="tradition" value="africana" checked />
-              <span class="figure-frame"><img src="assets/africano.webp" data-i18n-alt="tradition.africanAlt" alt="Figura fantástica de um feiticeiro africano" /></span>
-              <span class="tradition-copy"><small data-i18n="tradition.africanFigure">Feiticeiro Africano</small><strong data-i18n="tradition.africanName">Africana</strong><em data-i18n="tradition.africanDescription">Ancestralidade, terra, memória e continuidade.</em></span>
+              <span class="figure-frame"><img src="assets/mestre-kamba.webp" data-i18n-alt="tradition.africanAlt" alt="Mestre Kamba da Tradição Africana" /></span>
+              <span class="culture-magic" aria-hidden="true"></span>
+              <span class="tradition-copy"><small data-i18n="tradition.africanName">Tradição Africana</small><strong data-i18n="tradition.africanFigure">Mestre Kamba</strong><em data-i18n="tradition.africanDescription">Ancestralidade, terra, memória, comunidade e continuidade.</em></span>
               <span class="selection-sigil" aria-hidden="true">✦</span>
             </label>
 
-            <label class="tradition-card">
+            <label class="tradition-card tradition-europeia" data-guide="cagliostro">
               <input type="radio" name="tradition" value="europeia" />
-              <span class="figure-frame"><img src="assets/europeu.webp" data-i18n-alt="tradition.europeanAlt" alt="Figura fantástica de um feiticeiro europeu" /></span>
-              <span class="tradition-copy"><small data-i18n="tradition.europeanFigure">Feiticeiro Europeu</small><strong data-i18n="tradition.europeanName">Europeia</strong><em data-i18n="tradition.europeanDescription">Quiromancia clássica, escolhas e ciclos.</em></span>
+              <span class="figure-frame"><img src="assets/mestre-cagliostro.webp" data-i18n-alt="tradition.europeanAlt" alt="Mestre Cagliostro da Tradição Europeia" /></span>
+              <span class="culture-magic" aria-hidden="true"></span>
+              <span class="tradition-copy"><small data-i18n="tradition.europeanName">Tradição Europeia</small><strong data-i18n="tradition.europeanFigure">Mestre Cagliostro</strong><em data-i18n="tradition.europeanDescription">Quiromancia clássica, alquimia, escolhas, carácter e ciclos.</em></span>
               <span class="selection-sigil" aria-hidden="true">✦</span>
             </label>
 
-            <label class="tradition-card">
+            <label class="tradition-card tradition-elfica" data-guide="elorand">
               <input type="radio" name="tradition" value="elfica" />
-              <span class="figure-frame"><img src="assets/elfico.webp" data-i18n-alt="tradition.elvenAlt" alt="Figura fantástica de um mago élfico" /></span>
-              <span class="tradition-copy"><small data-i18n="tradition.elvenFigure">Mago Élfico</small><strong data-i18n="tradition.elvenName">Élfica</strong><em data-i18n="tradition.elvenDescription">Florestas antigas, estrelas e rios de fantasia.</em></span>
+              <span class="figure-frame"><img src="assets/mestre-elorand.webp" data-i18n-alt="tradition.elvenAlt" alt="Mestre Elorand da Tradição Élfica" /></span>
+              <span class="culture-magic" aria-hidden="true"></span>
+              <span class="tradition-copy"><small data-i18n="tradition.elvenName">Tradição Élfica</small><strong data-i18n="tradition.elvenFigure">Mestre Elorand</strong><em data-i18n="tradition.elvenDescription">Florestas antigas, estrelas, rios, luas e memória da natureza.</em></span>
               <span class="selection-sigil" aria-hidden="true">✦</span>
             </label>
 
-            <label class="tradition-card">
-              <input type="radio" name="tradition" value="magia-antiga" />
-              <span class="figure-frame"><img src="assets/elemental.webp" data-i18n-alt="tradition.elementalAlt" alt="Figura fantástica de um mago elemental" /></span>
-              <span class="tradition-copy"><small data-i18n="tradition.elementalFigure">Mago Elemental</small><strong data-i18n="tradition.elementalName">Magia Antiga</strong><em data-i18n="tradition.elementalDescription">Elementos, alquimia, selos e portais.</em></span>
+            <label class="tradition-card tradition-antiga" data-guide="malakor">
+              <input type="radio" name="tradition" value="antiga" />
+              <span class="figure-frame"><img src="assets/mestre-malakor.webp" data-i18n-alt="tradition.ancientAlt" alt="Mestre Malakor da Tradição Antiga" /></span>
+              <span class="culture-magic" aria-hidden="true"></span>
+              <span class="tradition-copy"><small data-i18n="tradition.ancientName">Tradição Antiga</small><strong data-i18n="tradition.ancientFigure">Mestre Malakor</strong><em data-i18n="tradition.ancientDescription">Selos, metais, portais, bibliotecas ocultas e sabedoria primordial.</em></span>
+              <span class="selection-sigil" aria-hidden="true">✦</span>
+            </label>
+
+            <label class="tradition-card tradition-islamica" data-guide="hikma">
+              <input type="radio" name="tradition" value="islamica" />
+              <span class="figure-frame"><img src="assets/mestre-hikma.webp" data-i18n-alt="tradition.islamicAlt" alt="Mestre Hikma da Tradição Islâmica" /></span>
+              <span class="culture-magic" aria-hidden="true"></span>
+              <span class="tradition-copy"><small data-i18n="tradition.islamicName">Tradição Islâmica</small><strong data-i18n="tradition.islamicFigure">Mestre Hikma</strong><em data-i18n="tradition.islamicDescription">Geometria, astronomia, equilíbrio, conhecimento e contemplação.</em></span>
+              <span class="selection-sigil" aria-hidden="true">✦</span>
+            </label>
+
+            <label class="tradition-card tradition-budista" data-guide="tara">
+              <input type="radio" name="tradition" value="budista" />
+              <span class="figure-frame"><img src="assets/mestre-tara.webp" data-i18n-alt="tradition.buddhistAlt" alt="Mestre Tara da Tradição Budista" /></span>
+              <span class="culture-magic" aria-hidden="true"></span>
+              <span class="tradition-copy"><small data-i18n="tradition.buddhistName">Tradição Budista</small><strong data-i18n="tradition.buddhistFigure">Mestre Tara</strong><em data-i18n="tradition.buddhistDescription">Compaixão, atenção, impermanência, equilíbrio e caminho interior.</em></span>
               <span class="selection-sigil" aria-hidden="true">✦</span>
             </label>
           </fieldset>
@@ -330,7 +350,7 @@
         <p data-i18n="footer.concept">Conceito de Salazar da Cruz</p>
       </div>
       <div class="footer-meta">
-        <p><span data-i18n="footer.version">Versão 1.6.2</span> · © <span id="year"></span></p>
+        <p><span data-i18n="footer.version">Versão 1.7.0</span> · © <span id="year"></span></p>
         <div class="language-switcher footer-languages" role="group" data-i18n-aria="language.label" aria-label="Escolher idioma">
           <button type="button" data-language="pt" aria-pressed="true">PT</button>
           <button type="button" data-language="en" aria-pressed="false">EN</button>
@@ -340,7 +360,7 @@
     </div>
   </footer>
 
-  <script src="config.js?v=20260725-162" defer></script>
-  <script src="app.js?v=20260725-162" defer></script>
+  <script src="config.js?v=20260727-170" defer></script>
+  <script src="app.js?v=20260727-170" defer></script>
 </body>
 </html>
