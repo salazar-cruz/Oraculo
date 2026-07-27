@@ -54,10 +54,10 @@ const ERROR_MESSAGES = {
 
 const traditionGuides = {
   africana: "The narrator is Master Kamba. Create a dignified symbolic reading inspired broadly by ancestry, earth, community, memory, oral wisdom and continuity. Use warm images of roots, drums, paths, fire and generations, but do not attribute the reading to a specific African people, invent real rituals or present Africa as one uniform culture.",
-  europeia: "The narrator is Master Cagliostro. Create a restrained and elegant reading inspired by classical European palmistry, Renaissance symbolism, alchemy, paths, choices, character and life cycles. Use images of mirrors, compasses, libraries, metals and constellations without asserting supernatural certainty.",
-  elfica: "The narrator is Master Elorand. Create an entirely fictional reading inspired by ancient forests, stars, rivers, trees, moons and imaginary elven peoples. Use lyrical natural imagery, keep it clearly fantastical and do not imitate any protected fictional universe.",
-  antiga: "The narrator is Master Malakor. Create a fictional primordial and hermetic reading inspired by ancient seals, metals, portals, forgotten cities, constellations and hidden libraries. Keep it solemn and mysterious. Do not give instructions for real magic, dangerous rituals or factual predictions.",
-  islamica: "The narrator is Master Hikma. Create a respectful symbolic reading inspired by the historical arts of geometry, astronomy, proportion, gardens, light, knowledge and contemplation across Islamic civilisations. Avoid invented scripture, false quotations, religious rulings, sacred claims, divination attributed to Islam or imitation of Quranic text.",
+  europeia: "The narrator is Mistress Samara. Create a fictional and respectful symbolic reading inspired by travelling caravans, moonlit roads, embroidered fabrics, silver ornaments, campfires, songs, cards, omens and intuition associated with a Gypsy tradition. Keep the tone mystical and itinerant, but avoid claims about real Romani people, ethnic traits or fortune-telling certainty.",
+  elfica: "The narrator is Mistress Nymeria. Create an entirely fictional reading inspired by ancient forests, stars, rivers, trees, moons and imaginary elven peoples. Use lyrical natural imagery, keep it clearly fantastical and do not imitate any protected fictional universe.",
+  antiga: "The narrator is Mistress Morgana. Create a fictional primordial and hermetic reading inspired by ancient seals, metals, portals, forgotten cities, constellations and hidden libraries. Keep it solemn and mysterious. Do not give instructions for real magic, dangerous rituals or factual predictions.",
+  islamica: "The narrator is Master Tarik. Create a respectful symbolic reading inspired by the historical arts of geometry, astronomy, proportion, gardens, light, knowledge and contemplation across Islamic civilisations. Avoid invented scripture, false quotations, religious rulings, sacred claims, divination attributed to Islam or imitation of Quranic text.",
   budista: "The narrator is Master Tara. Create a calm symbolic reading inspired by compassion, mindfulness, impermanence, balance, the lotus, the wheel and the inner path across Buddhist artistic traditions. Avoid claiming Buddhist doctrine, karma, rebirth, enlightenment or spiritual attainment as facts about the user."
 };
 
@@ -98,7 +98,7 @@ export default {
       return jsonResponse(200, {
         status: "ok",
         service: "Oráculo da Palma API",
-        version: "1.7.0",
+        version: "1.7.3",
         requestId,
         languages: ["pt", "en", "fr"],
         statistics: { configured: Boolean(env.STATS_DB), endpoint: "/stats" },
