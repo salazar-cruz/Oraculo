@@ -1187,3 +1187,63 @@ footer { border-top: 1px solid rgba(227,166,70,0.18); padding-block: 34px; backg
   color: #6c4118;
   text-shadow: none;
 }
+
+
+/* v1.7.5 — letras negras e bordas queimadas no pergaminho */
+.result-section .prophecy-card {
+  border-color: rgba(68, 37, 10, 0.58);
+  background:
+    radial-gradient(circle at 18% 14%, rgba(255,247,225,0.99), rgba(244,226,189,0.97) 18%, rgba(223,194,146,0.97) 52%, rgba(182,141,92,0.98) 100%);
+  box-shadow:
+    0 20px 36px rgba(0,0,0,0.34),
+    inset 0 0 0 1px rgba(255,246,215,0.34),
+    inset 0 0 34px rgba(112,72,22,0.12),
+    inset 0 -16px 26px rgba(112,72,22,0.10);
+}
+.result-section .prophecy-card::before {
+  background:
+    radial-gradient(circle at 0 0, rgba(50,24,7,0.66), transparent 18%),
+    radial-gradient(circle at 100% 0, rgba(58,28,8,0.62), transparent 18%),
+    radial-gradient(circle at 0 100%, rgba(56,27,8,0.62), transparent 19%),
+    radial-gradient(circle at 100% 100%, rgba(42,19,5,0.74), transparent 20%),
+    radial-gradient(circle at 12% 8%, rgba(124,67,18,0.42), transparent 12%),
+    radial-gradient(circle at 88% 10%, rgba(130,72,21,0.38), transparent 12%),
+    radial-gradient(circle at 10% 88%, rgba(128,71,20,0.40), transparent 13%),
+    radial-gradient(circle at 90% 92%, rgba(96,49,15,0.44), transparent 12%),
+    linear-gradient(180deg, rgba(86,48,14,0.22), transparent 11%, transparent 89%, rgba(74,40,12,0.28)),
+    linear-gradient(90deg, rgba(82,44,13,0.22), transparent 10%, transparent 90%, rgba(80,42,12,0.22));
+  mix-blend-mode: multiply;
+  filter: blur(0.2px) saturate(1.08);
+}
+.result-section .prophecy-card::after {
+  opacity: 0.48;
+  background:
+    radial-gradient(circle at 5% 5%, rgba(33,14,4,0.18), transparent 9%),
+    radial-gradient(circle at 96% 7%, rgba(37,16,4,0.15), transparent 10%),
+    radial-gradient(circle at 6% 94%, rgba(37,16,4,0.14), transparent 10%),
+    radial-gradient(circle at 96% 95%, rgba(33,14,4,0.18), transparent 10%),
+    repeating-linear-gradient(175deg, rgba(123,82,34,0.05) 0 2px, transparent 2px 9px);
+}
+.result-section .prophecy-card p:not(.card-label),
+.result-section .prophecy-card li,
+.result-section #opening-message,
+.result-section #closing-message,
+.result-section #life-reading,
+.result-section #head-reading,
+.result-section #heart-reading,
+.result-section #fate-reading {
+  color: #17100a;
+  text-shadow: none;
+}
+.result-section .prophecy-card h3,
+.result-section .closing-prophecy h3,
+.result-section .quality-badge span,
+.result-section .quality-badge strong,
+.result-section .symbol-chip,
+.result-section .card-label {
+  color: #24150a !important;
+}
+.result-section .quality-badge {
+  border-color: rgba(78,45,15,0.30);
+  background: linear-gradient(180deg, rgba(246,225,182,0.96), rgba(203,170,116,0.96));
+}
