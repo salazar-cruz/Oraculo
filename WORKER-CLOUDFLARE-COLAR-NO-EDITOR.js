@@ -107,7 +107,11 @@ export default {
           origin: origin || null,
           acceptedOrigin: acceptedOrigin || null,
           allowedOrigins,
+<<<<<<< HEAD
           model: String(env.GROQ_VISION_MODEL || "qwen/qwen3.8-27b"),
+=======
+          model: String(env.GROQ_VISION_MODEL || "meta-llama/llama-4-scout-17b-16e-instruct"),
+>>>>>>> 69fd05722acf95c0908a4f251d3e1d0cf3e0b05e
           groqKeyConfigured: Boolean(env.GROQ_API_KEY),
           groqKeyNormalised: Boolean(normaliseApiKey(env.GROQ_API_KEY)),
           statsDatabaseConfigured: Boolean(env.STATS_DB),
@@ -168,7 +172,11 @@ export default {
       return jsonResponse(400, { error: message(language, "invalidTradition"), requestId }, acceptedOrigin, requestId);
     }
 
+<<<<<<< HEAD
     const model = String(env.GROQ_VISION_MODEL || "qwen/qwen3.8-27b");
+=======
+    const model = String(env.GROQ_VISION_MODEL || "meta-llama/llama-4-scout-17b-16e-instruct");
+>>>>>>> 69fd05722acf95c0908a4f251d3e1d0cf3e0b05e
     const systemPrompt = buildSystemPrompt(language, tradition);
     const userPrompt = `
 User-supplied data:
