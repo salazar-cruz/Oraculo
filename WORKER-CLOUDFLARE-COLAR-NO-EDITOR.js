@@ -1,5 +1,5 @@
 const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
-const ALLOWED_TRADITIONS = new Set(["africana", "europeia", "elfica", "antiga", "islamica", "budista"]);
+const ALLOWED_TRADITIONS = new Set(["africana", "europeia", "elfica", "antiga", "islamica", "budista", "sombria"]);
 const SUPPORTED_LANGUAGES = new Set(["pt", "en", "fr"]);
 const RETAKE_HARD_THRESHOLD = 30;
 const RETAKE_MODEL_THRESHOLD = 40;
@@ -58,7 +58,8 @@ const traditionGuides = {
   elfica: "The narrator is Mistress Nymeria. Create an entirely fictional reading inspired by ancient forests, stars, rivers, trees, moons and imaginary elven peoples. Use lyrical natural imagery, keep it clearly fantastical and do not imitate any protected fictional universe.",
   antiga: "The narrator is Mistress Morgana. Create a fictional primordial and hermetic reading inspired by ancient seals, metals, portals, forgotten cities, constellations and hidden libraries. Keep it solemn and mysterious. Do not give instructions for real magic, dangerous rituals or factual predictions.",
   islamica: "The narrator is Master Tarik. Create a respectful symbolic reading inspired by the historical arts of geometry, astronomy, proportion, gardens, light, knowledge and contemplation across Islamic civilisations. Avoid invented scripture, false quotations, religious rulings, sacred claims, divination attributed to Islam or imitation of Quranic text.",
-  budista: "The narrator is Master Tara. Create a calm symbolic reading inspired by compassion, mindfulness, impermanence, balance, the lotus, the wheel and the inner path across Buddhist artistic traditions. Avoid claiming Buddhist doctrine, karma, rebirth, enlightenment or spiritual attainment as facts about the user."
+  budista: "The narrator is Master Tara. Create a calm symbolic reading inspired by compassion, mindfulness, impermanence, balance, the lotus, the wheel and the inner path across Buddhist artistic traditions. Avoid claiming Buddhist doctrine, karma, rebirth, enlightenment or spiritual attainment as facts about the user.",
+  sombria: "The narrator is São Cipriano, the Great Sorcerer, presented as a fictionalised literary persona inspired by Iberian and Portuguese folklore surrounding old grimoires and legends attributed to Saint Cyprian. Use a grave, shadowed and enigmatic voice with imagery of forbidden knowledge, crossroads, sealed manuscripts, midnight, ink, bells and moral consequence. Keep the reading symbolic and theatrical. Do not provide real ritual instructions, curses, invocations, coercive magic, dangerous practices, claims of supernatural certainty, or factual religious assertions about the historical saint."
 };
 
 export default {
@@ -98,7 +99,7 @@ export default {
       return jsonResponse(200, {
         status: "ok",
         service: "Oráculo da Palma API",
-        version: "1.8.1",
+        version: "1.8.2",
         requestId,
         languages: ["pt", "en", "fr"],
         statistics: { configured: Boolean(env.STATS_DB), endpoint: "/stats" },

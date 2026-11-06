@@ -26,6 +26,7 @@ body[data-tradition="elfica"] { --accent: #9dbb72; --accent-bright: #d4e8ae; --a
 body[data-tradition="antiga"] { --accent: #d78c48; --accent-bright: #ffbd75; --accent-2: #783017; }
 body[data-tradition="islamica"] { --accent: #d8b85e; --accent-bright: #ffe5a0; --accent-2: #124e55; }
 body[data-tradition="budista"] { --accent: #d99a45; --accent-bright: #ffdca0; --accent-2: #7b301d; }
+body[data-tradition="sombria"] { --accent: #a92b42; --accent-bright: #f08296; --accent-2: #22101d; }
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -801,6 +802,7 @@ footer { border-top: 1px solid rgba(227,166,70,0.18); padding-block: 34px; backg
 .tradition-antiga { --guide-glow: rgba(255,129,51,0.52); --guide-deep: rgba(71,20,5,0.84); }
 .tradition-islamica { --guide-glow: rgba(93,218,208,0.48); --guide-deep: rgba(5,47,55,0.84); }
 .tradition-budista { --guide-glow: rgba(255,179,76,0.5); --guide-deep: rgba(88,34,15,0.82); }
+.tradition-sombria { --guide-glow: rgba(190,44,73,0.5); --guide-deep: rgba(24,6,17,0.94); }
 .tradition-card:has(input:checked) {
   background: linear-gradient(105deg, var(--guide-deep), rgba(8,4,2,0.82));
   box-shadow: 0 0 36px var(--guide-glow), inset 0 0 34px rgba(255,255,255,0.025);
@@ -1597,6 +1599,187 @@ footer { border-top: 1px solid rgba(227,166,70,0.18); padding-block: 34px; backg
   border-radius: 50%;
   background: rgba(255,241,190,.38);
   border: 0;
+}
+
+/* São Cipriano — eclipse, sombra líquida e selo carmesim; figura criada apenas em CSS */
+.tradition-sombria { --master-accent: rgba(218,51,82,.88); }
+.tradition-sombria .figure-frame {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 24%, rgba(87,16,38,.26), transparent 31%),
+    linear-gradient(180deg, #080408 0%, #030203 62%, #10050b 100%);
+}
+.tradition-sombria .figure-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 50% 26%, transparent 0 34px, rgba(214,52,84,.15) 35px 38px, transparent 39px),
+    linear-gradient(115deg, transparent 10%, rgba(129,15,46,.10) 48%, transparent 75%);
+  opacity: .86;
+}
+.tradition-sombria .figure-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  background: linear-gradient(90deg, transparent 36%, rgba(4,2,4,.14) 62%, rgba(4,2,4,.91) 100%);
+}
+.cipriano-portrait {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: block;
+  filter: drop-shadow(0 18px 18px rgba(0,0,0,.66));
+}
+.cipriano-eclipse {
+  position: absolute;
+  width: 108px;
+  height: 108px;
+  left: 22px;
+  top: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 43% 43%, #070307 0 47%, transparent 48%), radial-gradient(circle, rgba(230,63,94,.62) 0 52%, rgba(92,15,39,.3) 59%, transparent 70%);
+  box-shadow: 0 0 26px rgba(204,43,76,.22);
+  animation: cipriano-eclipse 9.4s ease-in-out infinite;
+}
+.cipriano-hood {
+  position: absolute;
+  left: 18px;
+  top: 58px;
+  width: 116px;
+  height: 170px;
+  border-radius: 56% 56% 18% 18% / 38% 38% 12% 12%;
+  background:
+    linear-gradient(102deg, rgba(255,255,255,.035), transparent 26% 70%, rgba(125,24,48,.13)),
+    radial-gradient(ellipse at 50% 31%, #09060a 0 29%, #161018 30% 45%, #070508 46% 100%);
+  clip-path: polygon(50% 0, 91% 23%, 100% 100%, 0 100%, 9% 23%);
+  animation: cipriano-shadow-breathe 7.8s ease-in-out infinite alternate;
+}
+.cipriano-face {
+  position: absolute;
+  left: 48px;
+  top: 87px;
+  width: 57px;
+  height: 73px;
+  border-radius: 46% 46% 44% 44%;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.82), rgba(50,29,35,.54) 46%, rgba(0,0,0,.9)),
+    radial-gradient(ellipse at 50% 32%, rgba(103,74,72,.5), rgba(17,10,13,.94) 70%);
+  box-shadow: inset 0 -16px 22px rgba(0,0,0,.76);
+}
+.cipriano-eyes {
+  position: absolute;
+  left: 60px;
+  top: 111px;
+  width: 33px;
+  height: 3px;
+  background: linear-gradient(90deg, rgba(240,85,107,.88) 0 7px, transparent 7px 24px, rgba(240,85,107,.88) 24px 31px);
+  filter: blur(.15px);
+  box-shadow: 0 0 8px rgba(239,55,88,.72);
+  animation: cipriano-gaze 6.4s steps(1,end) infinite;
+}
+.cipriano-book {
+  position: absolute;
+  left: 32px;
+  bottom: 8px;
+  width: 90px;
+  height: 54px;
+  border: 1px solid rgba(193,60,86,.32);
+  border-radius: 3px 3px 8px 8px;
+  background:
+    linear-gradient(90deg, rgba(214,47,80,.11), transparent 48%, rgba(214,47,80,.09)),
+    #130a0e;
+  transform: perspective(170px) rotateX(58deg);
+  box-shadow: 0 0 18px rgba(164,25,55,.15);
+}
+.cipriano-book::before {
+  content: "✠";
+  position: absolute;
+  inset: 5px 0 auto;
+  text-align: center;
+  color: rgba(218,75,101,.58);
+  font-family: Georgia, serif;
+  font-size: 1.15rem;
+  text-shadow: 0 0 8px rgba(213,46,79,.26);
+}
+.tradition-sombria::before {
+  content: "";
+  position: absolute;
+  inset: -8% 46% -8% -8%;
+  z-index: 3;
+  background:
+    radial-gradient(ellipse at 32% 48%, rgba(0,0,0,.76), transparent 58%),
+    linear-gradient(130deg, transparent 22%, rgba(24,4,14,.58) 49%, transparent 72%);
+  filter: blur(9px);
+  animation: cipriano-ink 8.6s cubic-bezier(.45,0,.25,1) infinite alternate;
+  pointer-events: none;
+}
+.tradition-sombria::after {
+  content: "";
+  position: absolute;
+  left: 28px;
+  top: 50%;
+  width: 126px;
+  height: 126px;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background:
+    conic-gradient(from 10deg, transparent 0 8%, rgba(222,53,84,.48) 8% 9%, transparent 9% 24%, rgba(222,53,84,.28) 24% 25%, transparent 25% 48%, rgba(222,53,84,.42) 48% 49%, transparent 49% 74%, rgba(222,53,84,.28) 74% 75%, transparent 75%),
+    radial-gradient(circle, transparent 0 48%, rgba(194,42,71,.34) 49% 50%, transparent 51%);
+  mask: radial-gradient(circle, transparent 0 34%, #000 35% 100%);
+  opacity: .54;
+  animation: cipriano-seal 11s steps(12,end) infinite;
+  pointer-events: none;
+}
+.tradition-sombria .culture-magic {
+  border-radius: 50%;
+  border: 1px solid rgba(229,69,99,.62);
+  background: radial-gradient(circle, rgba(130,18,43,.22), rgba(8,3,7,.1) 58%, transparent 60%);
+  box-shadow: 0 0 26px rgba(174,28,56,.32), inset 0 0 18px rgba(191,39,68,.18);
+  animation: cipriano-seal-pulse 5.4s cubic-bezier(.45,0,.25,1) infinite;
+}
+.tradition-sombria .culture-magic::before {
+  inset: 17%;
+  border-radius: 0;
+  transform: rotate(45deg);
+  border-color: rgba(230,78,107,.48);
+}
+.tradition-sombria .culture-magic::after {
+  inset: 36%;
+  border-radius: 50%;
+  background: rgba(227,62,93,.5);
+  border: 0;
+  box-shadow: 0 0 11px rgba(227,62,93,.48);
+}
+@keyframes cipriano-eclipse {
+  0%,100% { transform: scale(.94); opacity:.48; filter:brightness(.78); }
+  50% { transform: scale(1.05); opacity:.92; filter:brightness(1.18); }
+}
+@keyframes cipriano-shadow-breathe {
+  from { transform: translateY(2px) scale(.985); filter:brightness(.88); }
+  to { transform: translateY(-3px) scale(1.025); filter:brightness(1.04); }
+}
+@keyframes cipriano-gaze {
+  0%,42%,100% { opacity:.78; }
+  43%,45% { opacity:.08; }
+  46%,72% { opacity:1; }
+  73%,74% { opacity:.18; }
+  75% { opacity:.86; }
+}
+@keyframes cipriano-ink {
+  from { transform: translateX(-10%) skewX(-4deg); opacity:.34; }
+  to { transform: translateX(12%) skewX(6deg); opacity:.82; }
+}
+@keyframes cipriano-seal {
+  0% { transform:translateY(-50%) rotate(0deg); filter:brightness(.72); }
+  100% { transform:translateY(-50%) rotate(360deg); filter:brightness(1.18); }
+}
+@keyframes cipriano-seal-pulse {
+  0%,100% { transform:translate(-50%,-50%) scale(.82); opacity:.44; filter:brightness(.76); }
+  52% { transform:translate(-50%,-50%) scale(1.08); opacity:1; filter:brightness(1.32); }
 }
 
 @keyframes kamba-presence {
