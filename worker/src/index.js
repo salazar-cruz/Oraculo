@@ -98,7 +98,7 @@ export default {
       return jsonResponse(200, {
         status: "ok",
         service: "Oráculo da Palma API",
-        version: "1.7.5",
+        version: "1.8.1",
         requestId,
         languages: ["pt", "en", "fr"],
         statistics: { configured: Boolean(env.STATS_DB), endpoint: "/stats" },
@@ -106,7 +106,7 @@ export default {
           origin: origin || null,
           acceptedOrigin: acceptedOrigin || null,
           allowedOrigins,
-          model: String(env.GROQ_VISION_MODEL || "qwen/qwen3.6-27b"),
+          model: String(env.GROQ_VISION_MODEL || "qwen/qwen3.8-27b"),
           groqKeyConfigured: Boolean(env.GROQ_API_KEY),
           groqKeyNormalised: Boolean(normaliseApiKey(env.GROQ_API_KEY)),
           statsDatabaseConfigured: Boolean(env.STATS_DB),
@@ -167,7 +167,7 @@ export default {
       return jsonResponse(400, { error: message(language, "invalidTradition"), requestId }, acceptedOrigin, requestId);
     }
 
-    const model = String(env.GROQ_VISION_MODEL || "qwen/qwen3.6-27b");
+    const model = String(env.GROQ_VISION_MODEL || "qwen/qwen3.8-27b");
     const systemPrompt = buildSystemPrompt(language, tradition);
     const userPrompt = `
 User-supplied data:
