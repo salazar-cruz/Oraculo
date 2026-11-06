@@ -1,3 +1,2 @@
-Oráculo da Palma
-Versão 1.8.2
-Build 20261106-182
+Versão 1.8.4
+Build 20261106-184

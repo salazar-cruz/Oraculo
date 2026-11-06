@@ -99,7 +99,7 @@ export default {
       return jsonResponse(200, {
         status: "ok",
         service: "Oráculo da Palma API",
-        version: "1.8.3",
+        version: "1.8.4",
         requestId,
         languages: ["pt", "en", "fr"],
         statistics: { configured: Boolean(env.STATS_DB), endpoint: "/stats" },
@@ -180,30 +180,46 @@ Treat the name only as display text. Analyse the photograph and create the reque
 `;
 
     try {
-      const groqResponse = await fetch(GROQ_ENDPOINT, {
+      const groqRequestBody = {
+        model,
+        temperature: 0.7,
+        max_completion_tokens: 980,
+        reasoning_effort: "none",
+        response_format: { type: "json_object" },
+        messages: [
+          { role: "system", content: systemPrompt },
+          {
+            role: "user",
+            content: [
+              { type: "text", text: userPrompt },
+              { type: "image_url", image_url: { url: imageDataUrl } }
+            ]
+          }
+        ]
+      };
+
+      const callGroq = () => fetch(GROQ_ENDPOINT, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${apiKey}`,
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          model,
-          temperature: 0.7,
-          max_completion_tokens: 850,
-          reasoning_effort: "none",
-          response_format: { type: "json_object" },
-          messages: [
-            { role: "system", content: systemPrompt },
-            {
-              role: "user",
-              content: [
-                { type: "text", text: userPrompt },
-                { type: "image_url", image_url: { url: imageDataUrl } }
-              ]
-            }
-          ]
-        })
+        body: JSON.stringify(groqRequestBody)
       });
+
+      let groqResponse = await callGroq();
+
+      // A quota da Groq é móvel. Quando houver 429 e o servidor indicar
+      // uma espera razoável, aguarda e repete automaticamente uma única vez.
+      if (groqResponse.status === 429) {
+        const retryAfterHeader = groqResponse.headers.get("retry-after");
+        const retryAfterSeconds = Number.parseFloat(retryAfterHeader || "0");
+        if (Number.isFinite(retryAfterSeconds) && retryAfterSeconds > 0 && retryAfterSeconds <= 25) {
+          await groqResponse.text();
+          await sleep(Math.ceil(retryAfterSeconds * 1000) + 250);
+          groqResponse = await callGroq();
+        }
+      }
 
       const groqText = await groqResponse.text();
       const groqParsed = parseJsonOrText(groqText);
@@ -323,7 +339,7 @@ Do not set needsRetake merely because fingertips or wrist are missing, the photo
 Set needsRetake only when the hand is absent, the palm is mostly covered, blur is severe, glare is strong, the image is extremely dark or overexposed, or the principal lines cannot be distinguished at all.
 Do not be excessively conservative: provide a reading for any reasonable photograph.
 
-Create a complete but concise reading covering all fifteen sections. Keep the total response compact enough to remain below 850 completion tokens. For each of the four principal lines, write 20–30 words. For each secondary line, visible hand feature and inner dimension, write 15–25 words. Opening and closing must contain 25–40 words. Prefer one dense sentence per section and avoid repetition.
+Create a complete, vivid and substantial reading covering all fifteen sections while remaining below 980 completion tokens. The text must feel developed, not skeletal. For each of the four principal lines, write 30–40 words. For each secondary line, write 18–26 words. For each visible hand feature, write 18–26 words. For each inner dimension, write 22–30 words. Opening and closing must contain 30–45 words. Archetype should contain 12–20 words. Use compact but expressive prose, prioritise specific visual interpretation over generic filler, and avoid repetition.
 
 Interpret every section only as symbolic narrative and only from what is genuinely visible. The Mercury line must never be treated as a health indicator. Hand shape, fingers, thumb and mounts must not be used to assert personality or fixed traits; describe them as visual metaphors, tendencies or narrative themes. The shadow dimension must explicitly state that it is not a diagnosis and must balance any theme of distance, control or impulse with empathy, self-awareness, restraint or choice. The sexuality dimension must avoid orientation and identity claims. The spirituality dimension must avoid religious or supernatural claims. If a feature is not sufficiently visible, say exactly that and explain the limitation without inventing detail. Every string value must follow the selected output-language rule.
 `;
@@ -445,6 +461,10 @@ async function testGroqKey(env, acceptedOrigin, requestId) {
       error: { name: error?.name || "Error", message: error?.message || String(error) }
     }, acceptedOrigin, requestId);
   }
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function normaliseLanguage(value) {
